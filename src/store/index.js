@@ -50,7 +50,6 @@ export default new Vuex.Store({
     /**首页获取所有不匿名树洞 */
     getALLtips(state,data){
       state.allTips = data
-      console.log(state.allTips)
     },
     /**首页获取所有匿名树洞 */
     getAllanonymous(state,data){

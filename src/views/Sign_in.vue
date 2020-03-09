@@ -58,8 +58,8 @@ export default {
         if (valid) {
           
           http.post('/api/User', signmsg).then(res => {
-            console.log(res)
-            if (res.data !== '') {
+            if (res.data.length !== 0) {
+              console.log(res.data)
               that.$message({
                 showClose: true,
                 message: '恭喜你，登录成功',
@@ -72,7 +72,6 @@ export default {
                 nickname:res.data[0].nickname,//发表昵称
                 replynickname:res.data[0].replynickname//回复昵称
               }
-              console.log(user)
               utils.setCookie('user',JSON.stringify(user),2)
             } else {
               that.$message({
