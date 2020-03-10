@@ -1,9 +1,20 @@
 <template>
   <div class="personal">
     <Navigate :defaultIndex="defaultIndex" :isLogin="isLogin" :loginuser="user"></Navigate>
-    个人中心
-    <div>{{allArticle}}</div>
-    <div>{{articlenum}}</div>
+    我的所有树洞
+    <div v-for="item in allArticle" :key="item.topicID">
+      <el-collapse accordion>
+        <el-collapse-item>
+          <template slot="title">
+            <span>{{item.title}}</span>
+            <!-- <i class="header-icon el-icon-info"></i>  -->
+            <span>{{item.time}}</span>
+            </template>
+          <div>习近平指出，在这场严峻斗争中，湖北各级党组织和广大党员、干部冲锋在前、英勇奋战，全省医务工作者和援鄂医疗队员白衣执甲、逆行出征，人民解放军指战员闻令即动、勇挑重担，广大社区工作者、公安干警、基层干部、下沉干部、志愿者不惧风雨、坚守一线，广大群众众志成城、踊跃参与，涌现出一大批可歌可泣的先进典型和感人事迹。</div>
+        </el-collapse-item>
+        
+      </el-collapse>
+    </div>
   </div>
 </template>
 
@@ -18,8 +29,8 @@ export default {
       defaultIndex: '3',
       isLogin: false, //是否登录
       user: '', //登录用户
-  allArticle:'',//所有树洞
-  articlenum:'',//树洞数
+      allArticle: '', //所有树洞
+      articlenum: '' //树洞数
     }
   },
   components: {
@@ -49,15 +60,17 @@ export default {
     /**获取本人的所有树洞 */
     console.log(this.user.nickname)
     http.post('/api/UserTree', { nickname: this.user.nickname }).then(res => {
-      console.log(res.data)
-      if(res.data.length == 0){
+      console.log('--------------')
+      // let arr = JSON.parse(JSON.stringify(res.data))
+      if (res.data.length == 0) {
         this.allArticle = '空'
-      }else{
-      this.allArticle = res.data
+      } else {
+        this.allArticle = res.data
       }
+      // console.log(arr)
     })
     /**本人所有树洞数 */
-    http.post('/api/UserTreeNum',{ nickname: this.user.nickname }).then(res => {
+    http.post('/api/UserTreeNum', { nickname: this.user.nickname }).then(res => {
       console.log(res.data)
       this.articlenum = res.data
     })
@@ -66,7 +79,7 @@ export default {
 </script>
 
 <style lang="scss">
-.personal{
+.personal {
   margin-top: 35px;
 }
 </style>
