@@ -38,6 +38,7 @@ import http from '@/utils/http.js'
 export default {
   data() {
     let reg = /^[a-zA-Z0-9_\u4E00-\u9FA5]{4,16}$/
+    
 
     const checkSex = (rule, value, callback) => {
       if (!value) {

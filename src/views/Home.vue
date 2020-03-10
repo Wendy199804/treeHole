@@ -1,12 +1,20 @@
 <template>
   <div class="home">
     <Navigate :defaultIndex="defaultIndex" :isLogin="isLogin" :loginuser="user"></Navigate>
-    <div class="banner">banner</div>
+    <div class="banner">
+      <el-carousel :interval="4000" type="card" height="200px">
+        <el-carousel-item v-for="item in carouselimgArr" :key="item.id">
+          <!-- <img src="../assets/carousel_img1.jpg" alt="" class="carousel-img"> -->
+          <img :src="item.src" alt="" class="carousel-img" />
+        </el-carousel-item>
+      </el-carousel>
+    </div>
     <div class="home-content-wrap">
       <div class="home-content-left">
-        <div>
+        <div class="content-search">
           <div class="input_wrap">
-            <el-input placeholder="搜索标题..." v-model="searchTipValue" class="input-with-select">
+            <span></span>
+            <el-input placeholder="请输入标题..." v-model="searchTipValue" class="input-with-select">
               <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
             </el-input>
           </div>
@@ -21,12 +29,15 @@
                     <div class="tip-head"></div>
                   </div>
                   <div class="tips-item-right">
-                    <div class="username">
-                      <p>{{ item.nickName }}</p>
+                    <div class="ut">
+                      <div class="username">
+                        <p>{{ item.nickName }}</p>
+                      </div>
+                      <div class="time">
+                        <p>{{ item.time }}</p>
+                      </div>
                     </div>
-                    <div class="time">
-                      <p>{{ item.time }}</p>
-                    </div>
+
                     <div class="title">
                       <p>{{ item.title }}</p>
                     </div>
@@ -36,7 +47,7 @@
                   </div>
                 </div>
                 <div class="tips-item-bottom">
-                  <div style="border-right:1px solid #999999;"><i class="el-icon-view"></i>浏览</div>
+                  <div style="border-right:1px solid #999999;"><i class="el-icon-view"></i>{{ item.browseCount }}</div>
                   <div style="cursor:pointer;border-right:1px solid #999999;" @click="checkReply(item.topicID, index)"><i class="el-icon-chat-line-square"></i>{{ item.replyCount }}</div>
                   <div style="cursor:pointer" @click="checkDetails(item.topicID)"><i class="el-icon-info"></i>详情</div>
                 </div>
@@ -58,7 +69,7 @@
                 </div>
               </div>
             </div>
-            </el-tab-pane>
+          </el-tab-pane>
           <el-tab-pane label="匿名树洞" name="second">
             <div v-if="allanonymousTips.length <= 0" class="if-alltips-ready"><i class="el-icon-loading"></i></div>
             <div class="tips" v-if="allanonymousTips.length > 0">
@@ -68,12 +79,15 @@
                     <div class="tip-head"></div>
                   </div>
                   <div class="tips-item-right">
-                    <div class="username">
-                      <p>{{ item.nickName }}</p>
+                    <div class="ut">
+                      <div class="username">
+                        <p>{{ item.nickName }}</p>
+                      </div>
+                      <div class="time">
+                        <p>{{ item.time }}</p>
+                      </div>
                     </div>
-                    <div class="time">
-                      <p>{{ item.time }}</p>
-                    </div>
+
                     <div class="title">
                       <p>{{ item.title }}</p>
                     </div>
@@ -109,7 +123,7 @@
         </el-tabs>
       </div>
       <div class="home-content-right">
-        <div class="wx-erwm"></div>
+        <!-- <div class="wx-erwm"></div> -->
       </div>
     </div>
   </div>
@@ -140,7 +154,24 @@ export default {
       // replycontentery: '', //评论内容
       // allReply: '', //全部评论
       // ischeckReply: '' //是否查看评论
-      activeName: 'first'
+      activeName: 'first',
+      carouselimgArr: [{
+        id:'1',
+        src:'../assets/carousel_img1.jpg'
+      }, 
+      {
+        id:'2',
+        src:'../assets/carousel_img2.jpg'
+      }, 
+      {
+        id:'3',
+        src:'../assets/carousel_img3.jpg'
+      }, 
+      {
+        id:'4',
+        src:'../assets/carousel_img4.jpg'
+      }, 
+      ]
     }
   },
   components: {
@@ -188,6 +219,12 @@ export default {
         clearInterval(getALLtips)
       }
     }, 500)
+// let engsymbol = /^[]$/
+let chsymbol = /^[^·\-=【】、；‘，。\/~！@￥%……（）——\+\|：“《》？\-=;',\.\/~!@\$%()_\+{}\|:"\?0-9a-zA-Z\u4E00-\u9FA5\s!\n!\r]$/
+// let checksymbol = /^[]$/
+let regEx =/^(?!\\s)(?!.*\\s$)[\\w_\\.\\s]{1,30}$/
+let str = `*h`
+console.log(!chsymbol.test(str))
   },
   created() {
     /**查看登录状态 */
@@ -202,10 +239,10 @@ export default {
 <style lang="scss" scope>
 .home {
   // height: 100vh;
-  background-image: url(../assets/body_bg.jpg);
-  background-repeat: no-repeat;
-  background-color: rgb(27, 33, 69);
-  background-attachment: fixed;
+  // background-image: url(../assets/body_bg.jpg);
+  // background-repeat: no-repeat;
+  // background-color: rgb(27, 33, 69);
+  // background-attachment: fixed;
   min-width: 900px;
   .if-alltips-ready {
     width: 100px;
@@ -220,6 +257,27 @@ export default {
       color: #fff;
       font-size: 30px;
     }
+  }
+  .el-tabs--top {
+    margin-top: 20px;
+  }
+  .el-tabs__nav .is-active {
+    color: #000;
+    font-weight: bold;
+  }
+  .el-tabs__item {
+    color: #999;
+  }
+  .el-tabs__item:hover {
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+  }
+  .el-tabs__active-bar {
+    background-color: #000;
+  }
+  .el-tabs__nav-wrap::after {
+    background-color: #999;
   }
   .input_wrap {
     width: 358px;
@@ -238,20 +296,23 @@ export default {
     }
   }
   .banner {
-    width: 100%;
+    margin: 60px auto;
+    margin-top: 80px;
+    width: 1100px;
     height: 200px;
   }
   .tips {
-    width: 550px;
-    // margin: 0 auto;
+    margin: 0 auto;
+    width: 97%;
   }
   .tips-item {
-    width: 100%;
-    padding: 25px;
+    width: 97%;
+    padding: 15px;
     padding-bottom: 0px;
     border-radius: 5px;
     margin-bottom: 10px;
     background-color: white;
+    box-sizing: border-box;
     box-shadow: 1px 1px 10px rgb(187, 187, 187);
   }
   .tips-item-top {
@@ -268,9 +329,10 @@ export default {
     }
   }
   .tips-item-right {
+    width: 100%;
     .username {
       font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
     }
     .time {
       font-weight: 300;
@@ -280,6 +342,13 @@ export default {
     .title {
       font-size: 16px;
       margin-top: 8px;
+      text-overflow: -o-ellipsis-lastline;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
     .contentery {
       overflow: hidden;
@@ -368,28 +437,60 @@ export default {
     font-size: 12px;
   }
   .home-content-wrap {
-    width: 100%;
+    width: 1100px;
     min-width: 900px;
     margin: 0 auto;
-    background-color: #9999991c;
-    border-radius: 5px;
-    padding: 20px;
-    box-sizing: border-box;
+    // padding: 20px;
+    // box-sizing: border-box;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    // border-radius: 5px;
+    // box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.589);
+
+    // border-radius: 2px;
   }
   .home-content-left {
-    width: 650px;
+    width: 50%;
+  }
+  .input_wrap {
+    margin: 0 auto;
   }
   .home-content-right {
-    width: 300px;
-    display: flex;
-    justify-content: flex-end;
+    border: 1px solid black;
+    width: 45%;
+    // display: flex;
+    // justify-content: flex-end;
     .wx-erwm {
       width: 200px;
       height: 200px;
-      background-color: #fff;
+      background-color: rgb(90, 73, 73);
     }
+  }
+  .ut {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 200px;
+    margin: 0;
+  }
+
+  .el-carousel__item:nth-child(2n) {
+    // background-color: #99a9bf;
+  }
+
+  .el-carousel__item:nth-child(2n + 1) {
+    // background-color: #d3dce6;
+  }
+  .carousel-img {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

@@ -3,7 +3,6 @@
     <Navigate :defaultIndex="defaultIndex" :isLogin="isLogin" :loginuser="user"></Navigate>
     <div class="quillEditor">
       <p>发表树洞</p>
-
       <div>标题：<input type="text" v-model="editortitle" placeholder="请输入标题" /></div>
       <quill-editor ref="text" v-model="content" class="myQuillEditor" :options="editorOption" />
       <div>
@@ -18,7 +17,6 @@
         </el-select>
       </div>
       <el-button type="primary" @click="submit">提交</el-button>
-      <!-- <div v-html="content"></div> -->
     </div>
   </div>
 </template>
@@ -41,7 +39,6 @@ export default {
       defaultIndex: '4',
       content: '', //默认显示的内容
       editorOption: {
-        // theme:'bubble'
         placeholder: '在这里畅所欲言吧！',
         content: '', //编辑器内容
         editorTitle: '' //标题
@@ -62,8 +59,6 @@ export default {
     //点击提交
     submit() {
       this.content = this.$refs.text.value
-      console.log(this.$refs.text.value)
-      console.log(this.editortitle)
       let params = {
         classname: this.category,
         nickname: this.user.nickname,
@@ -78,7 +73,6 @@ export default {
       } else if (params.isname === '匿名发布') {
         anonymity_type = '匿名'
       }
-      console.log(anonymity_type)
       this.$confirm(`你将发布一条${anonymity_type}的树洞, 是否继续?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -96,8 +90,6 @@ export default {
           })
         })
     },
-    //验证
-    verification() {}
   },
   mounted() {
     addQuillTitle()

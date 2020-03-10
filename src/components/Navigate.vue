@@ -1,6 +1,9 @@
 <template>
   <div class="nav_top">
-    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="rgb(27, 33, 69)" text-color="#fff" active-text-color="#ffd04b">
+    <!-- <div style="width:1100px;height:100%"> -->
+
+    
+    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#000" text-color="#fff" active-text-color="#ffd04b">
       <el-menu-item index="1"><router-link to="/home">首页</router-link></el-menu-item>
       <el-submenu index="2">
         <template slot="title">关于</template>
@@ -25,6 +28,7 @@
         <el-menu-item index="2-3">注销</el-menu-item>
       </el-submenu>
     </el-menu>
+<!-- </div> -->
   </div>
 </template>
 
@@ -81,21 +85,24 @@ export default {
   // }
   .nav_top {
     height: 35px;
-    position: fixed;
+    position: absolute;
     top: 0;
-    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.829);
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.87);
+    width: 100%;
+    background-color: #000;
+    z-index: 10;
     a {
       display: block;
       width: 100%;
       height: 100%;
     }
-    width: 100%;
-    background-color: rgb(27, 33, 69);
+    
     .el-menu--horizontal > .sign {
       float: right;
     }
     .el-menu-demo {
-      min-width: 850px;
+      // min-width: 850px;
+      width: 1100px;
       margin: 0 auto;
       border: none;
       height: 35px;
@@ -113,7 +120,7 @@ export default {
     .el-submenu__title:hover,
     .el-menu-item:hover,
     .is-active {
-      background-color: #303861 !important;
+      background-color: #444 !important;
     }
 
     a {
