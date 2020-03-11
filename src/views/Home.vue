@@ -221,6 +221,7 @@ export default {
         clearInterval(getALLtips)
       }
     }, 500)
+    console.log(this.$store.state.userinfo)
   },
   created() {
     /**查看登录状态 */

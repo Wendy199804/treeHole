@@ -37,7 +37,7 @@
 import http from '@/utils/http.js'
 export default {
   data() {
-    let reg = /^[a-zA-Z0-9_\u4E00-\u9FA5]{4,16}$/
+    let reg = /^[a-zA-Z0-9_\u4E00-\u9FA5]{4,10}$/
     
 
     const checkSex = (rule, value, callback) => {
@@ -59,7 +59,7 @@ export default {
       }
       setTimeout(() => {
         if (!reg.test(value)) {
-          callback(new Error('用户名必须由字母、数字、下划线组成，且长度为4-16位'))
+          callback(new Error('用户名必须由字母、数字、下划线组成，且长度为4-10位'))
         } else {
           callback()
         }

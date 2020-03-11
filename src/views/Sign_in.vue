@@ -70,7 +70,7 @@ export default {
       }
       that.$refs[formName].validate(valid => {
         if (valid) {
-          this.$store.dispatch('sign_in_asyn')
+          this.$store.dispatch('sign_in_asyn',{signmsg,that})
         } else {
           that.$message({
             showClose: true,

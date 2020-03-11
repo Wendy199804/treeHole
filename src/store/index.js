@@ -95,21 +95,24 @@ export default new Vuex.Store({
     /**登录 */
     sign_in(state,params){
       state.userinfo = params
+      console.log(state.userinfo)
     }
   },
   actions: {
     /**登录 */
     sign_in_asyn(context,params){
-      http.post('/api/User', params).then(res => {
+      // console.log(params)
+      let that = this
+      http.post('/api/User', params.signmsg).then(res => {
         if (res.data.length !== 0) {
           console.log("??????????????")
           console.log(res.data)
-          that.$message({
+          params.that.$message({
             showClose: true,
             message: '恭喜你，登录成功',
             type: 'success'
           })
-          that.$router.push({name:'home'})
+          params.that.$router.push({name:'home'})
           let user = {
             username:res.data[0].username,//用户名
             nickname:res.data[0].nickname,//发表昵称
