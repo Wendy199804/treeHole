@@ -5,7 +5,9 @@
       <el-carousel :interval="4000" type="card" height="200px">
         <el-carousel-item v-for="item in carouselimgArr" :key="item.id">
           <!-- <img src="../assets/carousel_img1.jpg" alt="" class="carousel-img"> -->
-          <img :src="item.src" alt="" class="carousel-img" />
+          <div>
+            <img :src="item.src" alt="" class="carousel-img" />
+          </div>
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -219,12 +221,6 @@ export default {
         clearInterval(getALLtips)
       }
     }, 500)
-// let engsymbol = /^[]$/
-let chsymbol = /^[^·\-=【】、；‘，。\/~！@￥%……（）——\+\|：“《》？\-=;',\.\/~!@\$%()_\+{}\|:"\?0-9a-zA-Z\u4E00-\u9FA5\s!\n!\r]$/
-// let checksymbol = /^[]$/
-let regEx =/^(?!\\s)(?!.*\\s$)[\\w_\\.\\s]{1,30}$/
-let str = `*h`
-console.log(!chsymbol.test(str))
   },
   created() {
     /**查看登录状态 */

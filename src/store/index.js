@@ -14,6 +14,7 @@ export default new Vuex.Store({
       nickname:'', // 发表昵称
       replynickname:'' // 回复昵称
     },
+    userinfo:'',
     isLogin:false,
     classes:[  // 树洞类别
       {
@@ -91,9 +92,40 @@ export default new Vuex.Store({
         }
       })
     },
-    
+    /**登录 */
+    sign_in(state,params){
+      state.userinfo = params
+    }
   },
   actions: {
+    /**登录 */
+    sign_in_asyn(context,params){
+      http.post('/api/User', params).then(res => {
+        if (res.data.length !== 0) {
+          console.log("??????????????")
+          console.log(res.data)
+          that.$message({
+            showClose: true,
+            message: '恭喜你，登录成功',
+            type: 'success'
+          })
+          that.$router.push({name:'home'})
+          let user = {
+            username:res.data[0].username,//用户名
+            nickname:res.data[0].nickname,//发表昵称
+            replynickname:res.data[0].replynickname//回复昵称
+          }
+          utils.setCookie('user',JSON.stringify(user),2)
+          context.commit('sign_in',res.data[0])
+        } else {
+          that.$message({
+            showClose: true,
+            message: '登录失败',
+            type: 'error'
+          })
+        }
+      })
+    },
     /**首页获取所有非匿名树洞 */
     getALLtips_asyn(context){
       http.get('/api/TreeHole').then(res => {

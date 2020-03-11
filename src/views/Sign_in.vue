@@ -2,7 +2,10 @@
   <div class="sign_in">
     <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
       <el-form-item prop="username">
-        <el-input v-model.number="ruleForm.username" placeholder="请输入用户名.." prefix-icon="el-icon-user"></el-input>
+        <el-input v-model="ruleForm.username" placeholder="请输入用户名.." prefix-icon="el-icon-user"></el-input>
+      </el-form-item>
+       <el-form-item prop="number">
+        <el-input v-model="ruleForm.number" placeholder="请输入学号.." prefix-icon="el-icon-school"></el-input>
       </el-form-item>
       <el-form-item prop="pass">
         <el-input type="password" v-model="ruleForm.pass" autocomplete="off" placeholder="请输入密码.." prefix-icon="el-icon-notebook-2"></el-input>
@@ -28,6 +31,13 @@ export default {
         callback()
       }
     }
+    var checknumber = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('学号不能为空'))
+      } else {
+        callback()
+      }
+    }
     var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
@@ -38,11 +48,14 @@ export default {
     return {
       ruleForm: {
         pass: '',
-        username: ''
+        username: '',
+        number:''
       },
       rules: {
         pass: [{ validator: validatePass, trigger: 'blur' }],
-        username: [{ validator: checkusername, trigger: 'blur' }]
+        username: [{ validator: checkusername, trigger: 'blur' }],
+        number: [{ validator: checknumber, trigger: 'blur' }],
+
       }
     }
   },
@@ -52,35 +65,12 @@ export default {
       let signmsg ={
         username:that.ruleForm.username,
         password:that.ruleForm.pass,
+        number:that.ruleForm.number,
         enable:'普通用户'
       }
       that.$refs[formName].validate(valid => {
         if (valid) {
-          
-          http.post('/api/User', signmsg).then(res => {
-            if (res.data.length !== 0) {
-              console.log(res.data)
-              that.$message({
-                showClose: true,
-                message: '恭喜你，登录成功',
-                type: 'success'
-              })
-              // that.$router.push({path:`/home?username=${signmsg.username}`,query:{username:signmsg.username}})
-              that.$router.push({name:'home'})
-              let user = {
-                username:res.data[0].username,//用户名
-                nickname:res.data[0].nickname,//发表昵称
-                replynickname:res.data[0].replynickname//回复昵称
-              }
-              utils.setCookie('user',JSON.stringify(user),2)
-            } else {
-              that.$message({
-                showClose: true,
-                message: '登录失败',
-                type: 'error'
-              })
-            }
-          })
+          this.$store.dispatch('sign_in_asyn')
         } else {
           that.$message({
             showClose: true,
@@ -119,7 +109,7 @@ export default {
   }
   form{
     width: 300px;
-    background-color: rgba(168, 168, 168, 0.295);
+    background-color: rgba(0, 0, 0, 0.432);
     padding: 50px 100px;
     border-radius: 10px;
     position: absolute;
