@@ -5,24 +5,29 @@
       <p>发表树洞</p>
       <div class="publish-tip"><input type="text" v-model="editortitle" placeholder="请输入标题" /></div>
       <quill-editor ref="text" v-model="content" :options="editorOption" class="myQuillEditor"> </quill-editor>
-      <div>
-        <span>是否匿名发布</span>
-        <el-tooltip :content="anonymous" placement="top">
-          <el-switch v-model="anonymous" active-color="#13ce66" inactive-color="#ff4949" active-value="匿名发布" inactive-value="正常发布"> </el-switch>
-        </el-tooltip>
+      <div class="tip-conditions">
+        <div>
+          <span>是否匿名发布</span>
+          <el-tooltip :content="anonymous" placement="top">
+            <el-switch v-model="anonymous" active-color="#13ce66" inactive-color="#ff4949" active-value="匿名发布" inactive-value="正常发布"> </el-switch>
+          </el-tooltip>
+        </div>
+        <div>
+          选择类别:<el-select v-model="category" clearable placeholder="请选择">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+          </el-select>
+        </div>
       </div>
-      <div>
-        选择类别:<el-select v-model="category" clearable placeholder="请选择">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-        </el-select>
-      </div>
+
       <el-button type="primary" @click="submit">提交</el-button>
     </div>
+    <Footer/>
   </div>
 </template>
 
 <script>
 import Navigate from '@/components/Navigate.vue'
+import Footer from '@/components/Footer.vue'
 import utils from '@/utils/utils.js'
 import http from '@/utils/http.js'
 
@@ -54,9 +59,9 @@ export default {
           toolbar: [
             ['bold', 'italic', 'underline'], //加粗，斜体，下划线，删除线
             [{ color: [] }], // 字体颜色，字体背景颜色
-            [{ align: [] }],//对齐方式
-            [{ size: fontSizeStyle.whitelist}], // 字体大小
-            [{ list: 'ordered' }, { list: 'bullet' }], //列表
+            [{ align: [] }], //对齐方式
+            [{ size: fontSizeStyle.whitelist }], // 字体大小
+            [{ list: 'ordered' }, { list: 'bullet' }] //列表
           ]
         },
         theme: 'snow'
@@ -65,7 +70,8 @@ export default {
   },
   components: {
     Navigate,
-    quillEditor
+    quillEditor,
+    Footer
   },
   computed: {
     editor() {
@@ -128,73 +134,96 @@ export default {
 </script>
 
 <style lang="scss">
-
 .article {
   margin-top: 70px;
   .quillEditor {
-  width: 600px;
-  min-width: 600px;
-  height: 600px;
-  margin: 0 auto;
-  position: relative;
-  &>p{
-    text-align: center;
+    width: 600px;
+    min-width: 600px;
+    // height: 550px;
+    padding-bottom: 50px;
+    margin: 0 auto;
     position: relative;
-    color: #999;
-    font-family: 幼圆;
-    font-size: 20px;
-    margin-bottom: 30px;
-    &::before,&::after{
-      content: '';
-      display: block;
-      width: 300px;
-      height: 1px;
-      background-color: rgba(153, 153, 153, 0.418);
+    & > p {
+      text-align: center;
+      position: relative;
+      color: #999;
+      font-family: 幼圆;
+      font-size: 20px;
+      margin-bottom: 30px;
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        width: 300px;
+        height: 1px;
+        background-color: rgba(153, 153, 153, 0.418);
+        position: absolute;
+        top: 12px;
+      }
+      &::before {
+        left: -70px;
+      }
+      &::after {
+        right: -70px;
+      }
+    }
+    .ql-toolbar.ql-snow {
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
+    }
+    .myQuillEditor {
+      width: 100%;
+      height: 100%;
+      .ql-container {
+        height: 500px;
+      }
+    }
+    .el-button--primary {
       position: absolute;
-      top: 12px
-    }
-    &::before{
-      left: -70px;
-    }
-    &::after{
-      right: -70px;
+      right: 0px;
     }
   }
-  .ql-toolbar.ql-snow {
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-}
-  .myQuillEditor {
-    width: 100%;
-    height: 100%;
-    .ql-container {
-      height: 534px;
+  .publish-tip {
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    height: 40px;
+    padding-top: 20px;
+    input {
+      border: none;
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box;
+      padding-left: 15px;
+      font-size: 20px;
     }
   }
-  .el-button--primary {
-    position: absolute;
-    right: 0px;
+  .ql-toolbar {
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
   }
-}
-.publish-tip{
-  border-top: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  height: 40px;
-  padding-top: 20px;
-  input{
+  .tip-conditions{
+    display:flex;
+    justify-content: space-between;
+    margin: 15px 0;
+    &>div:nth-child(1){
+      width:30%;
+      display: flex;
+      align-items: center;
+    }
+    &>div{
+      width:50%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    &>div:nth-child(2){
+      justify-content: space-between;
+    }
+  }
+ .el-button--primary{
+    background-color: black;
     border: none;
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
-    padding-left: 15px;
-    font-size: 20px;
   }
 }
-.ql-toolbar{
-  border-top: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-}
-}
-
 </style>

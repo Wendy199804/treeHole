@@ -84,6 +84,7 @@ export default {
   //   }
   // }
   .nav_top {
+    min-width: 1000px;
     height: 35px;
     position: absolute;
     top: 0;
@@ -102,7 +103,7 @@ export default {
     }
     .el-menu-demo {
       // min-width: 850px;
-      width: 1100px;
+      width: 1000px;
       margin: 0 auto;
       border: none;
       height: 35px;

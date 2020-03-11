@@ -30,37 +30,40 @@
           被举报次数：<span>{{ this.$store.state.userinfo.tipnumber }}</span>
         </p>
       </div>
-      <div class="edit-msg"><i class="el-icon-edit-outline"></i><span>修改资料</span></div>
+      <div class="edit-msg" ><div style="position:absolute;right:8px;top:13px;width:100px"><i class="el-icon-edit-outline"></i><span>修改资料</span></div></div>
     </div>
 
     <div class="alltips">
       <p style="color:#999;margin-bottom:20px">我的所有树洞</p>
       <div v-for="item in allArticle" :key="item.topicID" class="tip-item">
         <el-tag type="warning" effect="dark" class="anonymous-tag" v-if="item.isName == '不匿名'">不匿名</el-tag>
-        <el-tag type="info" effect="dark" class="anonymous-tag" v-if="item.isName == '匿名'">匿名</el-tag>
+        <el-tag type="info" effect="dark" class="anonymous-tag" v-if="item.isName == '已匿名'">匿名</el-tag>
         <el-collapse accordion>
           <el-collapse-item>
             <template slot="title">
               <span>标题：{{ item.title }}</span>
-              <!-- <i class="header-icon el-icon-info"></i>  -->
-              <div class="tip-time">
-                <i class="el-icon-view"></i> <span style="display:inline-block;width:30px;"> {{item.browseCount}}</span>
-                <i class="el-icon-chat-line-square"></i> <span style="display:inline-block;width:30px;"> {{item.replyCount}}</span>
-                <i class="el-icon-timer"></i> <span style="display:inline-block;width:125px;"> {{ item.time }}</span>
-              </div>
-              
             </template>
-            <div v-html="item.contentery" class="tip-content"></div>
+            <div  class="tip-content">
+              <div v-html="item.contentery"></div>
+              <div class="tip-time">
+                <div><i class="el-icon-view"></i> <span style="display:inline-block;width:30px;"> {{item.browseCount}}</span></div>
+                <div><i class="el-icon-chat-line-square"></i> <span style="display:inline-block;width:30px;"> {{item.replyCount}}</span></div>
+                <div><i class="el-icon-timer"></i> <span style="display:inline-block;width:166px;"> {{ item.time }}</span></div>
+              </div>
+            </div>
           </el-collapse-item>
         </el-collapse>
+        
       </div>
     </div>
-    <div class="footer"></div>
+    <Footer/>
   </div>
 </template>
 
 <script>
 import Navigate from '@/components/Navigate.vue'
+import Footer from '@/components/Footer.vue'
+
 import utils from '@/utils/utils.js'
 import http from '@/utils/http.js'
 
@@ -76,7 +79,8 @@ export default {
     }
   },
   components: {
-    Navigate
+    Navigate,
+    Footer
   },
   methods: {
     handleChange(val) {
@@ -114,13 +118,15 @@ export default {
 
 <style lang="scss">
 .personal {
-  width: 100%;
+  // width: 100%;
+  min-width: 1000px;
   // height: 100vh;
   padding-top: 70px;
   background-color: rgb(230, 230, 230);
   /**个人信息 */
   .top-msg {
-    width: 1000px;
+    width: 70%;
+    min-width: 800px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -129,30 +135,32 @@ export default {
     font-size: 16px;
     border-radius: 10px;
     background-color: white;
-    div {
+    &>div {
       width: 30%;
       padding: 20px 0;
       display: flex;
       box-sizing: border-box;
     }
-    div:nth-child(2),
-    div:nth-child(3) {
+    &>div:nth-child(2),
+    &>div:nth-child(3) {
       flex-direction: column;
       justify-content: flex-start;
       padding: 45px 0;
       padding-left: 40px;
     }
-    div:nth-child(1) {
+    &>div:nth-child(1) {
       text-align: center;
       border-right: 1px solid rgba(177, 177, 177, 0.452);
     }
     .edit-msg {
       width: 10%;
       color: #999;
+      position: relative;
       span {
         cursor: pointer;
       }
     }
+    
     .name-msg {
       justify-content: center;
       p {
@@ -205,13 +213,24 @@ export default {
       margin-right: 20px;
     }
   }
+  // .el-collapse-item__header,.el-collapse-item__wrap{
+  //   border-bottom: none;
+  // }
+
   .tip-time{
+    display: flex;
+    justify-content: flex-end;
+    // border-bottom: 1px solid #EBEEF5;
+    padding: 5px 0;
+    color:#999;
+    font-size: 14px;
     position: absolute;
-    right: 30px;
-    top: 0px;
+    bottom: -30px;
+    right:-22px;
   }
   .alltips {
-    width: 1000px;
+    width: 70%;
+    min-width: 800px;
     margin: 30px auto;
     padding: 20px;
     border-radius: 10px;
@@ -230,12 +249,9 @@ export default {
   }
   .tip-content{
     padding-left: 70px;
+    position: relative;
   }
-  /** */
-  .footer {
-    width: 100vw;
-    height: 200px;
-    background-color: black;
-  }
+  
+ 
 }
 </style>
