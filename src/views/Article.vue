@@ -3,8 +3,8 @@
     <Navigate :defaultIndex="defaultIndex" :isLogin="isLogin" :loginuser="user"></Navigate>
     <div class="quillEditor">
       <p>发表树洞</p>
-      <div>标题：<input type="text" v-model="editortitle" placeholder="请输入标题" /></div>
-      <quill-editor ref="text" v-model="content" class="myQuillEditor" :options="editorOption" />
+      <div class="publish-tip"><input type="text" v-model="editortitle" placeholder="请输入标题" /></div>
+      <quill-editor ref="text" v-model="content" :options="editorOption" class="myQuillEditor"> </quill-editor>
       <div>
         <span>是否匿名发布</span>
         <el-tooltip :content="anonymous" placement="top">
@@ -31,31 +31,54 @@ import { quillEditor } from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+import * as Quill from 'quill'
 import { addQuillTitle } from '@/utils/quill-title.js'
+let fontSizeStyle = Quill.import('attributors/style/size')
+fontSizeStyle.whitelist = ['12px', '14px', '16px', '20px', '24px', '36px']
+Quill.register(fontSizeStyle, true)
 /*** */
 export default {
   data() {
     return {
       defaultIndex: '4',
-      content: '', //默认显示的内容
-      editorOption: {
-        placeholder: '在这里畅所欲言吧！',
-        content: '', //编辑器内容
-        editorTitle: '' //标题
-      },
       editortitle: '', //标题
       isLogin: false, //是否登录
       user: '', //登录用户
       anonymous: '匿名发布', // 是否匿名
       options: '', //树洞类别
-      category: ''
+      category: '',
+      content: '',
+      editorOption: {
+        placeholder: '在这里畅所欲言吧！',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline'], //加粗，斜体，下划线，删除线
+            [{ color: [] }], // 字体颜色，字体背景颜色
+            [{ align: [] }],//对齐方式
+            [{ size: fontSizeStyle.whitelist}], // 字体大小
+            [{ list: 'ordered' }, { list: 'bullet' }], //列表
+          ]
+        },
+        theme: 'snow'
+      }
     }
   },
   components: {
     Navigate,
     quillEditor
   },
+  computed: {
+    editor() {
+      return this.$refs.myQuillEditor.quill
+    }
+  },
   methods: {
+    onEditorReady(editor) {
+      // 准备编辑器
+    },
+    onEditorBlur() {}, // 失去焦点事件
+    onEditorFocus() {}, // 获得焦点事件
+    onEditorChange() {}, // 内容改变事件
     //点击提交
     submit() {
       this.content = this.$refs.text.value
@@ -81,7 +104,7 @@ export default {
         .then(() => {
           let that = this
           this.$store.dispatch('submitTip', { params, that })
-          that.$router.push({name:'home'})
+          that.$router.push({ name: 'home' })
         })
         .catch(() => {
           this.$message({
@@ -89,7 +112,7 @@ export default {
             message: '已取消发布'
           })
         })
-    },
+    }
   },
   mounted() {
     addQuillTitle()
@@ -105,17 +128,42 @@ export default {
 </script>
 
 <style lang="scss">
-.article{
-  margin-top: 35px;
 
-}
-.quillEditor {
+.article {
+  margin-top: 70px;
+  .quillEditor {
   width: 600px;
   min-width: 600px;
   height: 600px;
   margin: 0 auto;
   position: relative;
-  border: 1px solid red;
+  &>p{
+    text-align: center;
+    position: relative;
+    color: #999;
+    font-family: 幼圆;
+    font-size: 20px;
+    margin-bottom: 30px;
+    &::before,&::after{
+      content: '';
+      display: block;
+      width: 300px;
+      height: 1px;
+      background-color: rgba(153, 153, 153, 0.418);
+      position: absolute;
+      top: 12px
+    }
+    &::before{
+      left: -70px;
+    }
+    &::after{
+      right: -70px;
+    }
+  }
+  .ql-toolbar.ql-snow {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
   .myQuillEditor {
     width: 100%;
     height: 100%;
@@ -123,10 +171,30 @@ export default {
       height: 534px;
     }
   }
-  
   .el-button--primary {
     position: absolute;
     right: 0px;
   }
 }
+.publish-tip{
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  height: 40px;
+  padding-top: 20px;
+  input{
+    border: none;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 15px;
+    font-size: 20px;
+  }
+}
+.ql-toolbar{
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+}
+
 </style>

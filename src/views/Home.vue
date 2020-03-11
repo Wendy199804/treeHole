@@ -4,9 +4,8 @@
     <div class="banner">
       <el-carousel :interval="4000" type="card" height="200px">
         <el-carousel-item v-for="item in carouselimgArr" :key="item.id">
-          <!-- <img src="../assets/carousel_img1.jpg" alt="" class="carousel-img"> -->
-          <div>
-            <img :src="item.src" alt="" class="carousel-img" />
+          <div style="width:100%;height:100%">
+            <img :src="item.src" alt="" class="carousel-img"  style="width:100%;height:100%"/>
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -478,16 +477,12 @@ export default {
   }
 
   .el-carousel__item:nth-child(2n) {
-    // background-color: #99a9bf;
+    background-color: #99a9bf;
   }
 
   .el-carousel__item:nth-child(2n + 1) {
-    // background-color: #d3dce6;
+    background-color: #d3dce6;
   }
-  .carousel-img {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
+ 
 }
 </style>
