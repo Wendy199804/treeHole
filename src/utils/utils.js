@@ -25,7 +25,18 @@ function getCookie(key){  //获取cookie
       return false;
   }
 }
+
+function removeCookie(key){  //删除cookie
+	document.cookie=key+"=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+	if(!getCookie(key)){
+		console.log('删除成功');
+	}else{
+		console.log('删除失败');
+	}
+}
+
 export default {
   setCookie,
-  getCookie
+  getCookie,
+  removeCookie
 }

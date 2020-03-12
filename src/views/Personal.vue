@@ -16,47 +16,42 @@
           回复昵称：<span>{{ this.$store.state.user.replynickname }}</span>
         </p>
         <p>
-          性别：<span>{{ this.$store.state.userinfo.sex }}</span>
+          性别：<span>{{ this.$store.state.user.sex }}</span>
         </p>
         <p>
-          学号：<span>{{ this.$store.state.userinfo.number }}</span>
+          学号：<span>{{ this.$store.state.user.number }}</span>
         </p>
       </div>
       <div class="tree-msg">
         <p>
-          我的树洞数：<span>{{ this.$store.state.userinfo.topiccount }}</span>
+          我的树洞数：<span>{{ this.$store.state.user.topiccount }}</span>
         </p>
         <p>
-          被举报次数：<span>{{ this.$store.state.userinfo.tipnumber }}</span>
+          被举报次数：<span>{{ this.$store.state.user.tipnumber }}</span>
         </p>
       </div>
-      <div class="edit-msg" ><div style="position:absolute;right:8px;top:13px;width:100px"><i class="el-icon-edit-outline"></i><span>修改资料</span></div></div>
-    </div>
-
-    <div class="alltips">
-      <p style="color:#999;margin-bottom:20px">我的所有树洞</p>
-      <div v-for="item in allArticle" :key="item.topicID" class="tip-item">
-        <el-tag type="warning" effect="dark" class="anonymous-tag" v-if="item.isName == '不匿名'">不匿名</el-tag>
-        <el-tag type="info" effect="dark" class="anonymous-tag" v-if="item.isName == '已匿名'">匿名</el-tag>
-        <el-collapse accordion>
-          <el-collapse-item>
-            <template slot="title">
-              <span>标题：{{ item.title }}</span>
-            </template>
-            <div  class="tip-content">
-              <div v-html="item.contentery"></div>
-              <div class="tip-time">
-                <div><i class="el-icon-view"></i> <span style="display:inline-block;width:30px;"> {{item.browseCount}}</span></div>
-                <div><i class="el-icon-chat-line-square"></i> <span style="display:inline-block;width:30px;"> {{item.replyCount}}</span></div>
-                <div><i class="el-icon-timer"></i> <span style="display:inline-block;width:166px;"> {{ item.time }}</span></div>
-              </div>
-            </div>
-          </el-collapse-item>
-        </el-collapse>
-        
+      <div class="edit-msg">
+        <div style="position:absolute;right:8px;top:13px;width:100px"><i class="el-icon-edit-outline"></i><span>修改资料</span></div>
       </div>
     </div>
-    <Footer/>
+
+    
+
+    <div class="mini-navigation">
+      <el-menu class="el-menu-vertical-demo" default-active="1" @select="mini_handleSelect">
+        <el-menu-item index="1">
+          <router-link :to="{ name: 'mytips' }" style="color:#303133;display: block;width: 100%;height: 100%;"><span>我的树洞</span></router-link>
+        </el-menu-item>
+        <el-menu-item index="2">
+           <router-link :to="{ name: 'mycomments' }" style="color:#303133;display: block;width: 100%;height: 100%;"><span>我的评论</span></router-link>
+        </el-menu-item>
+        
+      </el-menu>
+      <div class="right-contain">
+        <router-view></router-view>
+      </div>
+    </div>
+    <Footer />
   </div>
 </template>
 
@@ -73,7 +68,7 @@ export default {
       defaultIndex: '3',
       isLogin: false, //是否登录
       user: '', //登录用户
-      allArticle: '', //所有树洞
+      // allArticle: '', //所有树洞
       articlenum: '' //树洞数
       // a:''
     }
@@ -85,33 +80,37 @@ export default {
   methods: {
     handleChange(val) {
       console.log(val)
+    },
+    mini_handleSelect(key, keyPath) {
+      console.log(key)
     }
   },
+
   created() {
     this.$store.commit('ifLogin')
     this.user = this.$store.state.user
     this.isLogin = this.$store.state.isLogin
   },
   mounted() {
-    /**获取本人的所有树洞 */
-    console.log(this.user.nickname)
-    http.post('/api/UserTree', { nickname: this.user.nickname }).then(res => {
-      console.log(res.data)
-      // this.a = res.data[0].contentery
-      // let arr = JSON.parse(JSON.stringify(res.data))
-      if (res.data.length == 0) {
-        this.allArticle = '空'
-      } else {
-        this.allArticle = res.data
-      }
-      // console.log(arr)
-    })
-    /**本人所有树洞数 */
-    http.post('/api/UserTreeNum', { nickname: this.user.nickname }).then(res => {
-      console.log(res.data)
-      this.articlenum = res.data
-    })
-    console.log(this.$store.state.userinfo)
+    // /**获取本人的所有树洞 */
+    // console.log(this.user.nickname)
+    // http.post('/api/UserTree', { nickname: this.user.nickname }).then(res => {
+    //   console.log(res.data)
+    //   // this.a = res.data[0].contentery
+    //   // let arr = JSON.parse(JSON.stringify(res.data))
+    //   if (res.data.length == 0) {
+    //     this.allArticle = '空'
+    //   } else {
+    //     this.allArticle = res.data
+    //   }
+    //   // console.log(arr)
+    // })
+    // /**本人所有树洞数 */
+    // http.post('/api/UserTreeNum', { nickname: this.user.nickname }).then(res => {
+    //   console.log(res.data)
+    //   this.articlenum = res.data
+    // })
+    // console.log(this.$store.state.userinfo)
   }
 }
 </script>
@@ -121,6 +120,7 @@ export default {
   // width: 100%;
   min-width: 1000px;
   // height: 100vh;
+  // min-height: 100vh;
   padding-top: 70px;
   background-color: rgb(230, 230, 230);
   /**个人信息 */
@@ -135,20 +135,20 @@ export default {
     font-size: 16px;
     border-radius: 10px;
     background-color: white;
-    &>div {
+    & > div {
       width: 30%;
       padding: 20px 0;
       display: flex;
       box-sizing: border-box;
     }
-    &>div:nth-child(2),
-    &>div:nth-child(3) {
+    & > div:nth-child(2),
+    & > div:nth-child(3) {
       flex-direction: column;
       justify-content: flex-start;
       padding: 45px 0;
       padding-left: 40px;
     }
-    &>div:nth-child(1) {
+    & > div:nth-child(1) {
       text-align: center;
       border-right: 1px solid rgba(177, 177, 177, 0.452);
     }
@@ -160,7 +160,7 @@ export default {
         cursor: pointer;
       }
     }
-    
+
     .name-msg {
       justify-content: center;
       p {
@@ -204,54 +204,30 @@ export default {
       }
     }
   }
-  /**树洞 */
-  .el-collapse-item__header {
-    display: flex;
-    justify-content: space-between;
-    padding-left: 70px;
-    span {
-      margin-right: 20px;
-    }
-  }
-  // .el-collapse-item__header,.el-collapse-item__wrap{
-  //   border-bottom: none;
-  // }
-
-  .tip-time{
-    display: flex;
-    justify-content: flex-end;
-    // border-bottom: 1px solid #EBEEF5;
-    padding: 5px 0;
-    color:#999;
-    font-size: 14px;
-    position: absolute;
-    bottom: -30px;
-    right:-22px;
-  }
-  .alltips {
+ 
+  .mini-navigation {
     width: 70%;
     min-width: 800px;
+    min-height: 500px;
     margin: 30px auto;
-    padding: 20px;
     border-radius: 10px;
-    box-sizing: border-box;
     background-color: #ffffff;
-  }
-  .tip-item {
-    margin-bottom: 15px;
-    position: relative;
-
-    .anonymous-tag {
-      position: absolute;
-      left: 0px;
-      top: 9px;
+    display: flex;
+    justify-content: space-between;
+    .el-menu {
+      width: 180px;
+      &>.is-active {
+      color: #000;
+      font-weight: blod;
+      border-right: 2px solid #999;
+    }
+    }
+    
+    .right-contain {
+      width: 100%;
+      padding: 15px;
+      box-sizing: border-box;
     }
   }
-  .tip-content{
-    padding-left: 70px;
-    position: relative;
-  }
-  
- 
 }
 </style>

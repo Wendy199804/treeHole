@@ -2,7 +2,6 @@
   <div class="nav_top">
     <!-- <div style="width:1100px;height:100%"> -->
 
-    
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#000" text-color="#fff" active-text-color="#ffd04b">
       <el-menu-item index="1"><router-link to="/home">首页</router-link></el-menu-item>
       <el-submenu index="2">
@@ -23,16 +22,18 @@
       <el-menu-item index="6" class="sign"><router-link :to="{ name: 'signup' }">注册</router-link></el-menu-item>
       <el-submenu v-if="isLogin" index="7" class="sign">
         <template slot="title">欢迎回来，{{ loginuser.username }}</template>
-        <el-menu-item index="2-1"><router-link :to="{ name: 'personal' }" style="color:white">个人中心</router-link></el-menu-item>
+        <el-menu-item index="2-1"><router-link :to="{ name: 'personal' }" style="color:white;display: block;width: 100%;height: 100%;">个人中心</router-link></el-menu-item>
         <el-menu-item index="2-2">设置</el-menu-item>
-        <el-menu-item index="2-3">注销</el-menu-item>
+        <el-menu-item index="2-3"><span @click="logout" style="color:white;display: block;width: 100%;height: 100%;">注销</span></el-menu-item>
       </el-submenu>
     </el-menu>
-<!-- </div> -->
+    <!-- </div> -->
   </div>
 </template>
 
 <script>
+import utils from '@/utils/utils.js'
+
 export default {
   data() {
     return {
@@ -56,8 +57,31 @@ export default {
     }
   },
   methods: {
+    
     handleSelect(key, keyPath) {
       console.log(key, keyPath)
+    },
+    logout() {
+      this.$confirm('您将注销此账户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '已成功注销!'
+          })
+           utils.removeCookie('user')
+           this.$store.state.isLogin=false
+           this.$router.push({name:'home'})
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        })
     }
   },
   mounted() {},
@@ -97,7 +121,7 @@ export default {
       width: 100%;
       height: 100%;
     }
-    
+
     .el-menu--horizontal > .sign {
       float: right;
     }

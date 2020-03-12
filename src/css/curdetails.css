@@ -1,0 +1,41 @@
+.el-drawer{
+    overflow-y: auto;
+}
+.detail-comment-item{
+    border-bottom: 1px solid #999999;
+}
+.detail-content{
+    padding: 20px;
+
+}
+.detail-content-time{
+    color: #999999;
+    font-size: 12px;
+}
+.detail-content-title{
+    font-size: 30px;
+    font-weight: bold;
+}
+.detail-content-author{
+    color: #999999;
+    font-size: 16px;
+}
+.detail-content-main{
+    border-top: 1px solid #8f8f8f;
+    margin: 20px auto ;
+
+}
+.detail-content-function{
+    margin: 20px auto ;
+}
+.detail-content-function>p{
+    font-family: 幼圆;
+    font-size: 22px;
+    padding: 20px 0;
+}
+.detail-comment{
+    padding-left: 50px;
+}
+.el-input{
+    width: 80%;
+}

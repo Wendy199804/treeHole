@@ -19,7 +19,20 @@ const routes = [
   {
     path: '/personal',
     name: 'personal',
-    component: () => import('../views/Personal.vue')
+    component: () => import('../views/Personal.vue'),
+    redirect: { name: 'mytips' },
+    children: [
+      {
+        path: 'mytips',
+        name:'mytips',
+        component: () => import('../components/Mytips.vue')
+      },
+      {
+        path: 'mycomments',
+        name:'mycomments',
+        component: () => import('../components/Mycomments.vue')
+      },
+    ]
   },
   {
     path: '/signin',
@@ -34,7 +47,7 @@ const routes = [
   {
     path: '/about',
     name: 'about',
-    component: () => import('../views/About.vue')
+    component: () => import('../views/About.vue'),
   },
   {
     path: '/visitor',

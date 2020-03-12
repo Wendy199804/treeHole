@@ -5,7 +5,7 @@
       <el-carousel :interval="4000" type="card" height="200px">
         <el-carousel-item v-for="item in carouselimgArr" :key="item.id">
           <div style="width:100%;height:100%">
-            <img :src="item.src" alt="" class="carousel-img"  style="width:100%;height:100%"/>
+            <img :src="item.src" alt="" class="carousel-img" style="width:100%;height:100%" />
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -50,7 +50,7 @@
                 <div class="tips-item-bottom">
                   <div style="border-right:1px solid #999999;"><i class="el-icon-view"></i>{{ item.browseCount }}</div>
                   <div style="cursor:pointer;border-right:1px solid #999999;" @click="checkReply(item.topicID, index)"><i class="el-icon-chat-line-square"></i>{{ item.replyCount }}</div>
-                  <div style="cursor:pointer" @click="checkDetails(item.topicID)"><i class="el-icon-info"></i>详情</div>
+                  <div style="cursor:pointer" @click="checkDetails(item.topicID, item.nickName)"><i class="el-icon-info"></i>详情</div>
                 </div>
                 <div v-if="item.ischeckReply" class="reply-item">
                   <div class="triangle"></div>
@@ -100,7 +100,7 @@
                 <div class="tips-item-bottom">
                   <div style="border-right:1px solid #999999;"><i class="el-icon-view"></i>浏览</div>
                   <div style="cursor:pointer;border-right:1px solid #999999;" @click="checkReply(item.topicID, index)"><i class="el-icon-chat-line-square"></i>{{ item.replyCount }}</div>
-                  <div style="cursor:pointer" @click="checkDetails(item.topicID)"><i class="el-icon-info"></i>详情</div>
+                  <div style="cursor:pointer" @click="checkDetails(item.topicID, item.nickName)"><i class="el-icon-info"></i>详情</div>
                 </div>
                 <div v-if="item.ischeckReply" class="reply-item">
                   <div class="triangle"></div>
@@ -127,6 +127,34 @@
         <!-- <div class="wx-erwm"></div> -->
       </div>
     </div>
+
+    <el-drawer title="树洞详情" :visible.sync="drawer" direction="rtl" :before-close="handleClose">
+      <div class="detail-content">
+        <p class="detail-content-time">{{ this.$store.state.currenttip.time }}</p>
+        <p class="detail-content-title">{{ this.$store.state.currenttip.title }}</p>
+        <p class="detail-content-author">作者：{{ this.$store.state.currenttip.nickName }}</p>
+        <div v-html="this.$store.state.currenttip.contentery" class="detail-content-main"></div>
+        <div style="height:1px"></div>
+        <div class="detail-content-function">
+          <p>评论</p>
+          <div>
+            <div class="myreply">
+              <el-input type="text" placeholder="发表你的见解" v-model="detail_comment" maxlength="50" show-word-limit> </el-input>
+              <el-button v-if="detail_comment !== ''" class="replybtn" @click="postReply($store.state.currenttip.topicID,'',detail_comment)">评论</el-button>
+              <el-button v-if="detail_comment == ''" type="info" disabled>评论</el-button>
+            </div>
+          </div>
+          <p>最新评论</p>
+          <div class="detail-comment">
+            <div v-for="(item, index) in this.$store.state.currentcomment" :key="index" class="detail-comment-item">
+              <p>{{ item.replyNickName }}</p>
+              <div>{{ item.reContentery }}</div>
+              <P>{{ item.createdOn }}</P>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
@@ -156,23 +184,27 @@ export default {
       // allReply: '', //全部评论
       // ischeckReply: '' //是否查看评论
       activeName: 'first',
-      carouselimgArr: [{
-        id:'1',
-        src:'../assets/carousel_img1.jpg'
-      }, 
-      {
-        id:'2',
-        src:'../assets/carousel_img2.jpg'
-      }, 
-      {
-        id:'3',
-        src:'../assets/carousel_img3.jpg'
-      }, 
-      {
-        id:'4',
-        src:'../assets/carousel_img4.jpg'
-      }, 
-      ]
+      carouselimgArr: [
+        {
+          id: '1',
+          src: '../assets/carousel_img1.jpg'
+        },
+        {
+          id: '2',
+          src: '../assets/carousel_img2.jpg'
+        },
+        {
+          id: '3',
+          src: '../assets/carousel_img3.jpg'
+        },
+        {
+          id: '4',
+          src: '../assets/carousel_img4.jpg'
+        }
+      ],
+      drawer: false, //详情是否打开
+      // direction: 'rtl',
+      detail_comment: '' //详情页的评论
     }
   },
   components: {
@@ -184,20 +216,36 @@ export default {
       this.$store.dispatch('searchKeywords', this.searchTipValue)
     },
     /**查看树洞详情 */
-    checkDetails(topicid) {
-      this.$store.dispatch('checkDetails', topicid)
+    checkDetails(topicid, nickname) {
+      this.$store.dispatch('checkDetails_asyn', { topicid, nickname })
+      this.drawer = true
+    },
+    /**关闭树洞详情 */
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {})
     },
     /**查看评论 */
     checkReply(topicid, index) {
+      console.log()
       this.$store.commit('checkReply', { topicid, index })
     },
     /**点击按钮  发表评论
      * index 为总索引 为了确定唯一的 replycontentery
      */
-    postReply(topicid, index) {
+    postReply(topicid, index ,content ='') {
+      console.log(topicid, index ,content)
       let that = this // store中的this和这里的this不同，所以要把this也传过去
-      this.$store.commit('postReply', { topicid, index, that })
-      this.checkReply(topicid, index)
+        this.$store.commit('postReply', { topicid, index, content ,that })
+       if(index !== ''){
+          this.$store.commit('checkReply', { topicid, index })
+       }else{
+         this.detail_comment =''
+       this.$store.commit('checkReply',{nickname:this.$store.state.user.nickname,topicid})
+       }
     },
     handleClick(tab, event) {
       console.log(tab.name)
@@ -210,6 +258,7 @@ export default {
           }
         }, 500)
       }
+      console.log(this.allanonymousTips)
     }
   },
   mounted() {
@@ -220,7 +269,7 @@ export default {
         clearInterval(getALLtips)
       }
     }, 500)
-    console.log(this.$store.state.userinfo)
+    // console.log(this.$store.state.userinfo)
   },
   created() {
     /**查看登录状态 */
@@ -233,6 +282,7 @@ export default {
 </script>
 
 <style lang="scss" scope>
+@import '../css/curdetails.css';
 .home {
   // height: 100vh;
   // background-image: url(../assets/body_bg.jpg);
@@ -483,6 +533,5 @@ export default {
   .el-carousel__item:nth-child(2n + 1) {
     background-color: #d3dce6;
   }
- 
 }
 </style>
