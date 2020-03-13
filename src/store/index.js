@@ -38,6 +38,7 @@ export default new Vuex.Store({
     allanonymousTips: '', //匿名树洞列表
     currenttip: '', //当前树洞详情
     currentcomment: '', //当前详情中的评论
+    searchTips:'',//搜索结果列表
   },
   mutations: {
     /**查看登录状态 */
@@ -132,6 +133,11 @@ export default new Vuex.Store({
     curComment(state, params) {
       state.currentcomment = params
       console.log(state.currentcomment)
+    },
+    /**搜索 */
+    searchKeywords(state,params){
+      state.searchTips = params
+      console.log(state.searchTips)
     }
   },
   actions: {
@@ -212,13 +218,12 @@ export default new Vuex.Store({
 
     },
     /**搜索关键字 */
-    searchKeywords(context, searchTipValue) {
-      console.log(searchTipValue)
+    searchKeywords_asyn(context, searchTipValue) {
       let params = {
         selectv: searchTipValue
       }
       http.post('/api/SelectTree', params).then(res => {
-        console.log(res.data)
+        context.commit('searchKeywords',res.data)
       })
     },
     /**发布树洞 */

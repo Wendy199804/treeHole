@@ -3,6 +3,9 @@
 }
 .detail-comment-item{
     border-bottom: 1px solid #999999;
+    margin: 12px 0;
+    padding-bottom: 5px;
+    position: relative;
 }
 .detail-content{
     padding: 20px;
@@ -37,5 +40,26 @@
     padding-left: 50px;
 }
 .el-input{
+    width: 100%;
+}
+/*搜索*/
+.search-drawer{
+    margin: 0 auto;
     width: 80%;
+}
+/* .search-drawer .input-with-select{
+    width: 600px;
+    margin: 0 auto;
+} */
+.searchcontent-item{
+    padding: 15px;
+    border-radius: 5px;
+    background-color: rgba(218, 219, 196, 0.267);
+    transition: all 0.3s;
+    margin: 15px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+.searchcontent-item:hover{
+    background-color: rgba(145, 145, 145, 0.253);
 }

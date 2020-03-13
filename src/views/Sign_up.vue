@@ -207,7 +207,7 @@ export default {
   }
   form {
     width: 300px;
-    background-color: rgba(168, 168, 168, 0.295);
+        background-color: rgba(0, 0, 0, 0.432);
     padding: 50px 100px;
     border-radius: 10px;
     position: absolute;

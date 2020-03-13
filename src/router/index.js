@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import utils from '@/utils/utils.js'
+
 // import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
@@ -14,7 +16,17 @@ const routes = [
   {
     path: '/article',
     name: 'article',
-    component: () => import('../views/Article.vue')
+    component: () => import('../views/Article.vue'),
+    // beforeEnter: (to, from, next) => {
+    //   if(!utils.getCookie('user')){
+    //     this.$alert('请先登录', '提示', {
+    //       confirmButtonText: '确定',
+    //     });
+    //   }else{
+    //     console.log("已登录")
+    //     next()
+    //   }
+    // }
   },
   {
     path: '/personal',
@@ -59,10 +71,28 @@ const routes = [
     name: 'secret',
     component: () => import('../views/Newsecret.vue')
   },
+  {
+    path:'*',
+    name:'error',
+    component:() => import('../views/error.vue')
+  }
 ]
 
 const router = new VueRouter({
   routes
 })
-
+//导航守卫
+router.beforeEach((to, from, next) => {
+  console.log(Vue)
+  if(to.name == 'home' || to.name == 'signup' || to.name == 'signin'){
+    next()
+  }else{
+    if(!utils.getCookie('user')){
+      alert('请先登录')
+    }else{
+      next()
+    }
+  }
+  
+})
 export default router

@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <Navigate :defaultIndex="defaultIndex" :isLogin="isLogin" :loginuser="user"></Navigate>
+
     <div class="banner">
       <el-carousel :interval="4000" type="card" height="200px">
         <el-carousel-item v-for="item in carouselimgArr" :key="item.id">
@@ -14,15 +15,12 @@
       <div class="home-content-left">
         <div class="content-search">
           <div class="input_wrap">
-            <span></span>
-            <el-input placeholder="请输入标题..." v-model="searchTipValue" class="input-with-select">
-              <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
-            </el-input>
+            <el-button icon="el-icon-search" circle @click="searchDrawer = true"></el-button>
           </div>
         </div>
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="不匿名的树洞" name="first">
-            <div v-if="allTips.length <= 0" class="if-alltips-ready"><i class="el-icon-loading"></i></div>
+            <div v-if="allTips.length <= 0" class="if-alltips-ready"><i class="el-icon-loading" style="color:#000"></i></div>
             <div class="tips" v-if="allTips.length > 0">
               <div v-for="(item, index) in allTips" :key="item.topicID" class="tips-item">
                 <div class="tips-item-top">
@@ -72,7 +70,7 @@
             </div>
           </el-tab-pane>
           <el-tab-pane label="匿名树洞" name="second">
-            <div v-if="allanonymousTips.length <= 0" class="if-alltips-ready"><i class="el-icon-loading"></i></div>
+            <div v-if="allanonymousTips.length <= 0" class="if-alltips-ready"><i class="el-icon-loading" style="color:#000"></i></div>
             <div class="tips" v-if="allanonymousTips.length > 0">
               <div v-for="(item, index) in allanonymousTips" :key="item.topicID" class="tips-item">
                 <div class="tips-item-top">
@@ -140,18 +138,29 @@
           <div>
             <div class="myreply">
               <el-input type="text" placeholder="发表你的见解" v-model="detail_comment" maxlength="50" show-word-limit> </el-input>
-              <el-button v-if="detail_comment !== ''" class="replybtn" @click="postReply($store.state.currenttip.topicID,'',detail_comment)">评论</el-button>
+              <el-button v-if="detail_comment !== ''" class="replybtn" @click="postReply($store.state.currenttip.topicID, '', detail_comment)">评论</el-button>
               <el-button v-if="detail_comment == ''" type="info" disabled>评论</el-button>
             </div>
           </div>
           <p>最新评论</p>
           <div class="detail-comment">
             <div v-for="(item, index) in this.$store.state.currentcomment" :key="index" class="detail-comment-item">
-              <p>{{ item.replyNickName }}</p>
-              <div>{{ item.reContentery }}</div>
-              <P>{{ item.createdOn }}</P>
+              <p style=" font-weight: bold;font-size:16px;color:#000000">{{ item.replyNickName }}</p>
+              <div style="color:#333;font-size:14px;margin:5px 0;">{{ item.reContentery }}</div>
+              <P style="color:#999999;font-size:12px;position:absolute;bottom:5px;right:8px;">{{ item.createdOn }}</P>
             </div>
           </div>
+        </div>
+      </div>
+    </el-drawer>
+    <el-drawer title="搜索" :append-to-body="true" direction="ltr" :visible.sync="searchDrawer" :before-close="searchClose" style="width:150%">
+      <div class="search-drawer">
+        <el-input placeholder="请输入标题..." v-model="searchTipValue" class="input-with-select">
+          <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
+        </el-input>
+        <div v-for="(item,index) in this.$store.state.searchTips" :key="index" class="searchcontent-item">
+          <p>{{item.title}}</p>
+          <span>{{item.time}}</span>
         </div>
       </div>
     </el-drawer>
@@ -204,7 +213,8 @@ export default {
       ],
       drawer: false, //详情是否打开
       // direction: 'rtl',
-      detail_comment: '' //详情页的评论
+      detail_comment: '', //详情页的评论
+      searchDrawer: false
     }
   },
   components: {
@@ -213,7 +223,12 @@ export default {
   methods: {
     /**搜索关键字 */
     search() {
-      this.$store.dispatch('searchKeywords', this.searchTipValue)
+      this.$store.dispatch('searchKeywords_asyn', this.searchTipValue)
+      // this.searchDrawer = true
+    },
+    /**search关闭 */
+    searchClose(){
+
     },
     /**查看树洞详情 */
     checkDetails(topicid, nickname) {
@@ -236,16 +251,16 @@ export default {
     /**点击按钮  发表评论
      * index 为总索引 为了确定唯一的 replycontentery
      */
-    postReply(topicid, index ,content ='') {
-      console.log(topicid, index ,content)
+    postReply(topicid, index, content = '') {
+      console.log(topicid, index, content)
       let that = this // store中的this和这里的this不同，所以要把this也传过去
-        this.$store.commit('postReply', { topicid, index, content ,that })
-       if(index !== ''){
-          this.$store.commit('checkReply', { topicid, index })
-       }else{
-         this.detail_comment =''
-       this.$store.commit('checkReply',{nickname:this.$store.state.user.nickname,topicid})
-       }
+      this.$store.commit('postReply', { topicid, index, content, that })
+      if (index !== '') {
+        this.$store.commit('checkReply', { topicid, index })
+      } else {
+        this.detail_comment = ''
+        this.$store.commit('checkReply', { nickname: this.$store.state.user.nickname, topicid })
+      }
     },
     handleClick(tab, event) {
       console.log(tab.name)
@@ -295,6 +310,7 @@ export default {
     height: 100px;
     position: relative;
     margin: 0 auto;
+    color: #000;
     i {
       position: absolute;
       top: 50%;
@@ -325,22 +341,7 @@ export default {
   .el-tabs__nav-wrap::after {
     background-color: #999;
   }
-  .input_wrap {
-    width: 358px;
-    line-height: 35px;
-    outline: none;
-    .el-input__inner {
-      width: 300px;
-    }
-    .el-input-group__append button.el-button {
-      background-color: #ffd04b;
-      border-radius: 0 4px 4px 0;
-    }
-    .el-input__inner:focus {
-      border: 1px solid #ffd04b;
-      outline: none;
-    }
-  }
+  
   .banner {
     margin: 60px auto;
     margin-top: 80px;
@@ -498,9 +499,7 @@ export default {
   .home-content-left {
     width: 50%;
   }
-  .input_wrap {
-    margin: 0 auto;
-  }
+ 
   .home-content-right {
     border: 1px solid black;
     width: 45%;
