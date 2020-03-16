@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <el-backtop></el-backtop>
     <Navigate :defaultIndex="defaultIndex" :isLogin="isLogin" :loginuser="user"></Navigate>
 
     <div class="banner">
@@ -36,7 +37,6 @@
                         <p>{{ item.time }}</p>
                       </div>
                     </div>
-
                     <div class="title">
                       <p>{{ item.title }}</p>
                     </div>
@@ -153,12 +153,12 @@
         </div>
       </div>
     </el-drawer>
-    <el-drawer title="搜索" :append-to-body="true" direction="ltr" :visible.sync="searchDrawer" :before-close="searchClose" style="width:150%">
+    <el-drawer title="搜索" :append-to-body="true" direction="ltr" :visible.sync="searchDrawer" style="width:150%">
       <div class="search-drawer">
         <el-input placeholder="请输入标题..." v-model="searchTipValue" class="input-with-select">
           <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
         </el-input>
-        <div v-for="(item,index) in this.$store.state.searchTips" :key="index" class="searchcontent-item">
+        <div v-for="(item,index) in this.$store.state.searchTips" :key="index" class="searchcontent-item" @click="checkDetails(item.topicID, item.nickName)">
           <p>{{item.title}}</p>
           <span>{{item.time}}</span>
         </div>
@@ -345,7 +345,7 @@ export default {
   .banner {
     margin: 60px auto;
     margin-top: 80px;
-    width: 1100px;
+    width: 1000px;
     height: 200px;
   }
   .tips {
@@ -484,8 +484,8 @@ export default {
     font-size: 12px;
   }
   .home-content-wrap {
-    width: 1100px;
-    min-width: 900px;
+    width: 1000px;
+    min-width: 800px;
     margin: 0 auto;
     // padding: 20px;
     // box-sizing: border-box;
@@ -531,6 +531,12 @@ export default {
 
   .el-carousel__item:nth-child(2n + 1) {
     background-color: #d3dce6;
+  }
+  .el-icon-caret-top{
+    color: #ffd04b;
+  }
+  .el-backtop{
+    box-shadow: 0 0 6px rgba(0,0,0,.42);
   }
 }
 </style>

@@ -61,6 +61,7 @@ export default new Vuex.Store({
     },
     /**查看评论 */
     checkReply(state, data) {
+      console.log(data.index)
       if (data.index!==undefined) {
         state.allTips[data.index].ischeckReply = true
         let params = {

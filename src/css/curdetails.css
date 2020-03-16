@@ -39,8 +39,9 @@
 .detail-comment{
     padding-left: 50px;
 }
-.el-input{
-    width: 100%;
+.myreply .el-input{
+    width: 78%;
+    margin-right: 10px;
 }
 /*搜索*/
 .search-drawer{
@@ -59,7 +60,15 @@
     margin: 15px 0;
     width: 100%;
     box-sizing: border-box;
+    position: relative;
+    cursor: pointer;
 }
 .searchcontent-item:hover{
     background-color: rgba(145, 145, 145, 0.253);
+}
+.searchcontent-item span{
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    color: #bbbbbb;
 }

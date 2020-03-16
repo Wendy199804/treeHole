@@ -32,10 +32,11 @@
       </div>
       <div class="edit-msg">
         <div style="position:absolute;right:8px;top:13px;width:100px"><i class="el-icon-edit-outline"></i><span>修改资料</span></div>
+        <el-button round style="position:absolute;right:8px;top:48px;cursor:pointer;background-color:#555;">
+          <router-link :to="{ name: 'article' }" style="color:#fff;display:block;width:100%;height:100%">发布新树洞</router-link>
+        </el-button>
       </div>
     </div>
-
-    
 
     <div class="mini-navigation">
       <el-menu class="el-menu-vertical-demo" default-active="1" @select="mini_handleSelect">
@@ -43,9 +44,8 @@
           <router-link :to="{ name: 'mytips' }" style="color:#303133;display: block;width: 100%;height: 100%;"><span>我的树洞</span></router-link>
         </el-menu-item>
         <el-menu-item index="2">
-           <router-link :to="{ name: 'mycomments' }" style="color:#303133;display: block;width: 100%;height: 100%;"><span>我的评论</span></router-link>
+          <router-link :to="{ name: 'mycomments' }" style="color:#303133;display: block;width: 100%;height: 100%;"><span>我的评论</span></router-link>
         </el-menu-item>
-        
       </el-menu>
       <div class="right-contain">
         <router-view></router-view>
@@ -125,7 +125,7 @@ export default {
   background-color: rgb(230, 230, 230);
   /**个人信息 */
   .top-msg {
-    width: 70%;
+    width: 1000px;
     min-width: 800px;
     margin: 0 auto;
     display: flex;
@@ -156,7 +156,7 @@ export default {
       width: 10%;
       color: #999;
       position: relative;
-      span {
+      & > span {
         cursor: pointer;
       }
     }
@@ -204,9 +204,9 @@ export default {
       }
     }
   }
- 
+
   .mini-navigation {
-    width: 70%;
+    width: 1000px;
     min-width: 800px;
     min-height: 500px;
     margin: 30px auto;
@@ -216,13 +216,13 @@ export default {
     justify-content: space-between;
     .el-menu {
       width: 180px;
-      &>.is-active {
-      color: #000;
-      font-weight: blod;
-      border-right: 2px solid #999;
+      & > .is-active {
+        color: #000;
+        font-weight: blod;
+        border-right: 2px solid #999;
+      }
     }
-    }
-    
+
     .right-contain {
       width: 100%;
       padding: 15px;
