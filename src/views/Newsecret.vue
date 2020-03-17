@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div class="newsecret">
+    <Navigate  :isLogin="isLogin" :loginuser="user"></Navigate>
+
     修改密码
     <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <el-form-item label="原密码" prop="pre_pass">
@@ -20,6 +22,9 @@
 </template>
 
 <script>
+
+import Navigate from '@/components/Navigate.vue'
+import Footer from '@/components/Footer.vue'
 import utils from '@/utils/utils.js'
 import http from '@/utils/http.js'
 
@@ -56,29 +61,34 @@ export default {
         pre_pass:'',//原密码
         pass: '',//新密码
         checkPass: '',
-        isLogin:'',//登陆状态
-        loginName:'',//当前用户名
       },
       rules: {
         pass: [{ validator: validatePass, trigger: 'blur' }],
         checkPass: [{ validator: validatePass2, trigger: 'blur' }],
         pre_pass: [{ validator: validatePre_pass, trigger: 'blur' }],
-      }
+      },
+      user:'',
+      isLogin:'',
     }
+  },
+  components: {
+    Navigate,
+    Footer
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(this.ruleForm)
           let params = {
-            nickname:this.loginName,
+            nickname:this.user.nickname,
             assword:this.ruleForm.pre_pass,
             conpassword:this.ruleForm.pass
           }
           console.log(params)
           http.post('api/ResetPass',params).then(res => {
             console.log(res.data)
+          }).catch(err => {
+            console.log(err)
           })
         } else {
           console.log('error submit!!')
@@ -88,18 +98,18 @@ export default {
     },
    
   },
-  created() {
+ created() {
     /**查看登录状态 */
-    if (utils.getCookie('username')) {
-      this.isLogin = true
-      this.loginName = utils.getCookie('username')
-      console.log(this.isLogin)
-      console.log(this.loginName)
-    } else {
-      this.isLogin = false
-    }
+    this.$store.commit('ifLogin')
+    this.user = this.$store.state.user
+    this.isLogin = this.$store.state.isLogin
+    console.log(this.user)
   }
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.newsecret{
+  margin-top:80px;
+}
+</style>

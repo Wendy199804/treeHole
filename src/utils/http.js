@@ -24,16 +24,15 @@ axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
 //     return Promise.reject(error)
 //   }
 // )
-console.log(process.env.VUE_PRO_URL)
-let root = process.request.use(
-  config=>{
-    let pubUrl = config.url.slice(4)
-    config.url = root + pubUrl
-    return config
-  }
-,error=>{
-  return Promise.reject(error)
-})
+// let root = process.request.use(
+//   config=>{
+//     let pubUrl = config.url.slice(4)
+//     config.url = root + pubUrl
+//     return config
+//   }
+// ,error=>{
+//   return Promise.reject(error)
+// })
 
 
 //响应拦截器

@@ -44,7 +44,7 @@ export default {
   props: {
     defaultIndex: {
       type: String,
-      required: true
+      required: false
     },
     isLogin: {
       type: Boolean,

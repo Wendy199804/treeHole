@@ -16,7 +16,8 @@ export default new Vuex.Store({
     },
     userinfo: '',
     isLogin: false,
-    classes: [ // 树洞类别
+    classes: [
+      // 树洞类别
       {
         value: '心情',
         label: '心情'
@@ -38,7 +39,7 @@ export default new Vuex.Store({
     allanonymousTips: '', //匿名树洞列表
     currenttip: '', //当前树洞详情
     currentcomment: '', //当前详情中的评论
-    searchTips:'',//搜索结果列表
+    searchTips: '' //搜索结果列表
   },
   mutations: {
     /**查看登录状态 */
@@ -61,25 +62,36 @@ export default new Vuex.Store({
     },
     /**查看评论 */
     checkReply(state, data) {
-      console.log(data.index)
-      if (data.index!==undefined) {
-        state.allTips[data.index].ischeckReply = true
+      // console.log(data.index)
+      if (data.index !== undefined) {
+        //打开非详情页评论
         let params = {
           nickname: state.user.nickname,
           topicid: data.topicid
         }
-        http.post('/api/ReplyDetails', params).then(res => {
-          state.allTips[data.index].allReply = res.data
-        })
+        if (!data.bool) {//非匿名树洞评论
+          state.allTips[data.index].ischeckReply = true
+          http.post('/api/ReplyDetails', params).then(res => {
+            state.allTips[data.index].allReply = res.data
+          })
+        }else{//匿名树洞评论
+          state.allanonymousTips[data.index].ischeckReply = true
+          http.post('/api/ReplyDetails', params).then(res => {
+            state.allanonymousTips[data.index].allReply = res.data
+          })
+        }
       } else {
-        http.post('/api/ReplyDetails', {
-          nickname: data.nickname,
-          topicid: data.topicid
-        }).then(res => {
-          state.currentcomment= res.data
-        })
+        //打开详情页评论
+        http
+          .post('/api/ReplyDetails', {
+            nickname: data.nickname,
+            topicid: data.topicid
+          })
+          .then(res => {
+            state.currentcomment = res.data
+          })
       }
-      console.log(state.currentcomment)
+      // console.log(state.currentcomment)
     },
     /**发表评论 */
     postReply(state, data) {
@@ -128,17 +140,17 @@ export default new Vuex.Store({
     /**查看树洞详情 */
     checkDetails(state, params) {
       state.currenttip = params
-      console.log(params)
+      // console.log(params)
     },
     /**树洞详情中显示评论 */
     curComment(state, params) {
       state.currentcomment = params
-      console.log(state.currentcomment)
+      // console.log(state.currentcomment)
     },
     /**搜索 */
-    searchKeywords(state,params){
+    searchKeywords(state, params) {
       state.searchTips = params
-      console.log(state.searchTips)
+      // console.log(state.searchTips)
     }
   },
   actions: {
@@ -148,8 +160,7 @@ export default new Vuex.Store({
       let that = this
       http.post('/api/User', params.signmsg).then(res => {
         if (res.data.length !== 0) {
-          console.log("??????????????")
-          console.log(res.data)
+          // console.log(res.data)
           params.that.$message({
             showClose: true,
             message: '恭喜你，登录成功',
@@ -188,7 +199,6 @@ export default new Vuex.Store({
         })
         context.commit('getALLtips', res.data)
       })
-      
     },
 
     /**首页获取所有匿名树洞 */
@@ -199,24 +209,27 @@ export default new Vuex.Store({
           item.ischeckReply = false
           item.allReply = ''
         })
-        console.log(res.data)
+        // console.log(res.data)
         context.commit('getAllanonymous', res.data)
       })
     },
     /**查看树洞详情 */
     checkDetails_asyn(context, params) {
-      http.post('/api/TreeDetails', {
-        topicid: params.topicid
-      }).then(res => {
-        context.commit('checkDetails', res.data[0])
-      })
-      http.post('/api/ReplyDetails', {
-        topicid: params.topicid,
-        nickname: params.nickname
-      }).then(res => {
-        context.commit('curComment', res.data)
-      })
-
+      http
+        .post('/api/TreeDetails', {
+          topicid: params.topicid
+        })
+        .then(res => {
+          context.commit('checkDetails', res.data[0])
+        })
+      http
+        .post('/api/ReplyDetails', {
+          topicid: params.topicid,
+          nickname: params.nickname
+        })
+        .then(res => {
+          context.commit('curComment', res.data)
+        })
     },
     /**搜索关键字 */
     searchKeywords_asyn(context, searchTipValue) {
@@ -224,13 +237,13 @@ export default new Vuex.Store({
         selectv: searchTipValue
       }
       http.post('/api/SelectTree', params).then(res => {
-        context.commit('searchKeywords',res.data)
+        context.commit('searchKeywords', res.data)
       })
     },
     /**发布树洞 */
     submitTip(context, data) {
       http.post('/api/InsertTree', data.params).then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.data === 'success') {
           data.that.$message({
             type: 'success',

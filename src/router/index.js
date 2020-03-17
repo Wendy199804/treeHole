@@ -17,16 +17,6 @@ const routes = [
     path: '/article',
     name: 'article',
     component: () => import('../views/Article.vue'),
-    // beforeEnter: (to, from, next) => {
-    //   if(!utils.getCookie('user')){
-    //     this.$alert('请先登录', '提示', {
-    //       confirmButtonText: '确定',
-    //     });
-    //   }else{
-    //     console.log("已登录")
-    //     next()
-    //   }
-    // }
   },
   {
     path: '/personal',
@@ -83,7 +73,7 @@ const router = new VueRouter({
 })
 //导航守卫
 router.beforeEach((to, from, next) => {
-  console.log(Vue)
+  // console.log(Vue)
   if(to.name == 'home' || to.name == 'signup' || to.name == 'signin'){
     next()
   }else{

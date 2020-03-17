@@ -8,7 +8,7 @@
             <el-popover placement="top" width="160" v-model="item.delete">
               <p>确定删除这一条树洞吗？</p>
               <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="visible = false">取消</el-button>
+                <el-button size="mini" type="text" @click="item.delete = false">取消</el-button>
                 <el-button type="primary" size="mini" @click="deleteTip(item.topicID, $store.state.user.nickname, index)">确定</el-button>
               </div>
               <i slot="reference" class="el-icon-circle-close" style="position:absolute;top:16px;right:0px;cursor:pointer" title="删除"></i>

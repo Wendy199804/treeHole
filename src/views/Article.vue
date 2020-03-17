@@ -170,7 +170,7 @@ export default {
     .ql-toolbar.ql-snow {
       border-top-left-radius: 0px;
       border-top-right-radius: 0px;
-    }
+    } 
     .myQuillEditor {
       width: 100%;
       height: 100%;

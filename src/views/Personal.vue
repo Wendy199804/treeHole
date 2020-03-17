@@ -31,7 +31,7 @@
         </p>
       </div>
       <div class="edit-msg">
-        <div style="position:absolute;right:8px;top:13px;width:100px"><i class="el-icon-edit-outline"></i><span>修改资料</span></div>
+        <div style="position:absolute;right:8px;top:13px;width:100px"><i class="el-icon-edit-outline"></i><router-link :to="{name:'secret'}"  style="color:#999;">修改资料</router-link></div>
         <el-button round style="position:absolute;right:8px;top:48px;cursor:pointer;background-color:#555;">
           <router-link :to="{ name: 'article' }" style="color:#fff;display:block;width:100%;height:100%">发布新树洞</router-link>
         </el-button>
@@ -156,9 +156,6 @@ export default {
       width: 10%;
       color: #999;
       position: relative;
-      & > span {
-        cursor: pointer;
-      }
     }
 
     .name-msg {

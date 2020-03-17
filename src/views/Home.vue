@@ -47,7 +47,7 @@
                 </div>
                 <div class="tips-item-bottom">
                   <div style="border-right:1px solid #999999;"><i class="el-icon-view"></i>{{ item.browseCount }}</div>
-                  <div style="cursor:pointer;border-right:1px solid #999999;" @click="checkReply(item.topicID, index)"><i class="el-icon-chat-line-square"></i>{{ item.replyCount }}</div>
+                  <div style="cursor:pointer;border-right:1px solid #999999;" @click="checkReply(item.topicID, index,false)"><i class="el-icon-chat-line-square"></i>{{ item.replyCount }}</div>
                   <div style="cursor:pointer" @click="checkDetails(item.topicID, item.nickName)"><i class="el-icon-info"></i>详情</div>
                 </div>
                 <div v-if="item.ischeckReply" class="reply-item">
@@ -97,7 +97,7 @@
                 </div>
                 <div class="tips-item-bottom">
                   <div style="border-right:1px solid #999999;"><i class="el-icon-view"></i>浏览</div>
-                  <div style="cursor:pointer;border-right:1px solid #999999;" @click="checkReply(item.topicID, index)"><i class="el-icon-chat-line-square"></i>{{ item.replyCount }}</div>
+                  <div style="cursor:pointer;border-right:1px solid #999999;" @click="checkReply(item.topicID, index,true)"><i class="el-icon-chat-line-square"></i>{{ item.replyCount }}</div>
                   <div style="cursor:pointer" @click="checkDetails(item.topicID, item.nickName)"><i class="el-icon-info"></i>详情</div>
                 </div>
                 <div v-if="item.ischeckReply" class="reply-item">
@@ -243,15 +243,19 @@ export default {
         })
         .catch(_ => {})
     },
-    /**查看评论 */
-    checkReply(topicid, index) {
+    /**查看评论
+     * index索引值
+     * bool=false :非匿名树洞
+     * bool=true :匿名树洞
+     */
+    checkReply(topicid, index,bool) {
       console.log()
-      this.$store.commit('checkReply', { topicid, index })
+      this.$store.commit('checkReply', { topicid, index,bool })
     },
     /**点击按钮  发表评论
      * index 为总索引 为了确定唯一的 replycontentery
      */
-    postReply(topicid, index, content = '') {
+    postReply(topicid, index, content) {
       console.log(topicid, index, content)
       let that = this // store中的this和这里的this不同，所以要把this也传过去
       this.$store.commit('postReply', { topicid, index, content, that })
@@ -443,11 +447,10 @@ export default {
       border: 1px solid #1b2143;
     }
     .myreply {
-      width: 500px;
+      width: 443px;
       display: flex;
       justify-content: space-around;
       padding-bottom: 10px;
-      border-bottom: 1px dashed #1b2143;
     }
   }
   .replybtn {
@@ -468,7 +471,7 @@ export default {
   .all-reply-item {
     padding-top: 5px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #999999;
+    border-top: 1px solid #cccccc;
   }
   .re-username {
     color: #1b2143;
