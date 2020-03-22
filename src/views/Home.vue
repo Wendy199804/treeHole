@@ -36,6 +36,17 @@
                       <div class="time">
                         <p>{{ item.time }}</p>
                       </div>
+                      <el-popover placement="top" width="160" trigger="click" v-model="item.reportbtn">
+                        <div>
+                          <p style="font-size:13px">请输入举报理由</p>
+                          <input type="text" placeholder="..." v-model="reportreason" style="margin-bottom:10px" />
+                        </div>
+                        <div style="text-align: right; margin: 0">
+                          <el-button size="mini" type="text" @click="item.reportbtn = false">取消</el-button>
+                          <el-button type="primary" size="mini" @click="report(item.nickName,index,false)">确定</el-button>
+                        </div>
+                        <div class="report" slot="reference">举报 <i class="el-icon-warning"></i></div>
+                      </el-popover>
                     </div>
                     <div class="title">
                       <p>{{ item.title }}</p>
@@ -46,9 +57,9 @@
                   </div>
                 </div>
                 <div class="tips-item-bottom">
-                  <div style="border-right:1px solid #999999;"><i class="el-icon-view"></i>{{ item.browseCount }}</div>
-                  <div style="cursor:pointer;border-right:1px solid #999999;" @click="checkReply(item.topicID, index,false)"><i class="el-icon-chat-line-square"></i>{{ item.replyCount }}</div>
-                  <div style="cursor:pointer" @click="checkDetails(item.topicID, item.nickName)"><i class="el-icon-info"></i>详情</div>
+                  <div style="border-right:1px solid #999999;"><i class="el-icon-view"></i> {{ item.browseCount }}</div>
+                  <div style="cursor:pointer;border-right:1px solid #999999;" @click="checkReply(item.topicID, index, false)"><i class="el-icon-chat-line-square"></i> {{ item.replyCount }}</div>
+                  <div style="cursor:pointer" @click="checkDetails(item.topicID, item.nickName)"><i class="el-icon-info"></i> 详情</div>
                 </div>
                 <div v-if="item.ischeckReply" class="reply-item">
                   <div class="triangle"></div>
@@ -85,6 +96,17 @@
                       <div class="time">
                         <p>{{ item.time }}</p>
                       </div>
+                      <el-popover placement="top" width="160" trigger="click" v-model="item.reportbtn">
+                        <div>
+                          <p style="font-size:13px">请输入举报理由</p>
+                          <input type="text" placeholder="..." v-model="reportreason" style="margin-bottom:10px" />
+                        </div>
+                        <div style="text-align: right; margin: 0">
+                          <el-button size="mini" type="text" @click="item.reportbtn = true">取消</el-button>
+                          <el-button type="primary" size="mini" @click="report(item.nickName,index,false)">确定</el-button>
+                        </div>
+                        <div class="report" slot="reference">举报 <i class="el-icon-warning"></i></div>
+                      </el-popover>
                     </div>
 
                     <div class="title">
@@ -97,7 +119,7 @@
                 </div>
                 <div class="tips-item-bottom">
                   <div style="border-right:1px solid #999999;"><i class="el-icon-view"></i>浏览</div>
-                  <div style="cursor:pointer;border-right:1px solid #999999;" @click="checkReply(item.topicID, index,true)"><i class="el-icon-chat-line-square"></i>{{ item.replyCount }}</div>
+                  <div style="cursor:pointer;border-right:1px solid #999999;" @click="checkReply(item.topicID, index, true)"><i class="el-icon-chat-line-square"></i>{{ item.replyCount }}</div>
                   <div style="cursor:pointer" @click="checkDetails(item.topicID, item.nickName)"><i class="el-icon-info"></i>详情</div>
                 </div>
                 <div v-if="item.ischeckReply" class="reply-item">
@@ -158,9 +180,9 @@
         <el-input placeholder="请输入标题..." v-model="searchTipValue" class="input-with-select">
           <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
         </el-input>
-        <div v-for="(item,index) in this.$store.state.searchTips" :key="index" class="searchcontent-item" @click="checkDetails(item.topicID, item.nickName)">
-          <p>{{item.title}}</p>
-          <span>{{item.time}}</span>
+        <div v-for="(item, index) in this.$store.state.searchTips" :key="index" class="searchcontent-item" @click="checkDetails(item.topicID, item.nickName)">
+          <p>{{ item.title }}</p>
+          <span>{{ item.time }}</span>
         </div>
       </div>
     </el-drawer>
@@ -196,25 +218,26 @@ export default {
       carouselimgArr: [
         {
           id: '1',
-          src: '../assets/carousel_img1.jpg'
+          src: '../img/carousel_img1.jpg'
         },
         {
           id: '2',
-          src: '../assets/carousel_img2.jpg'
+          src: '../img/carousel_img2.jpg'
         },
         {
           id: '3',
-          src: '../assets/carousel_img3.jpg'
+          src: '../img/carousel_img3.jpg'
         },
         {
           id: '4',
-          src: '../assets/carousel_img4.jpg'
+          src: '../img/carousel_img4.jpg'
         }
       ],
       drawer: false, //详情是否打开
-      // direction: 'rtl',
       detail_comment: '', //详情页的评论
-      searchDrawer: false
+      searchDrawer: false,
+      visible: false, //举报框是否显示
+      reportreason: '' //举报理由
     }
   },
   components: {
@@ -227,8 +250,55 @@ export default {
       // this.searchDrawer = true
     },
     /**search关闭 */
-    searchClose(){
-
+    searchClose() {},
+    /**举报
+     * nickname : 被举报的树洞的作者
+     * index : 该树洞的索引
+     * bool : true为匿名树洞，false为非匿名树洞
+     */
+    report(nickname,index,bool) {
+      console.log(this.allTips[index])
+      console.log(this.allTips[index].reportbtn)
+      if(!bool){
+          // console.log(this.allTips[index].reportbtn)
+          this.allTips[index].reportbtn = false
+        }else{
+          // console.log(this.allanonymousTips[index].reportbtn)
+          this.allanonymousTips[index].reportbtn = false
+        }
+      if (this.reportreason !== '') {
+        
+        let params = {
+          reportednickname: nickname,
+          bereportednickname: this.$store.state.user.nickname,
+          reason: this.reportreason
+        }
+        http.post('/api/InsertUserError', params).then(res => {
+          console.log(res)
+          if (res.data == 'success') {
+            this.$message({
+              message: '举报成功！',
+              type: 'success'
+            })
+            this.reportreason = ''
+          }else{
+            this.$message({
+              message: '举报失败！',
+              type: 'error'
+            })
+            this.reportreason = ''
+          }
+        })
+      }else{
+        this.$message({
+          message: '请输入举报理由',
+          type: 'warning'
+        });
+      }
+    },
+    /**举报关闭 */
+    reportclose(){
+      this.visible = false
     },
     /**查看树洞详情 */
     checkDetails(topicid, nickname) {
@@ -248,9 +318,9 @@ export default {
      * bool=false :非匿名树洞
      * bool=true :匿名树洞
      */
-    checkReply(topicid, index,bool) {
+    checkReply(topicid, index, bool) {
       console.log()
-      this.$store.commit('checkReply', { topicid, index,bool })
+      this.$store.commit('checkReply', { topicid, index, bool })
     },
     /**点击按钮  发表评论
      * index 为总索引 为了确定唯一的 replycontentery
@@ -345,7 +415,7 @@ export default {
   .el-tabs__nav-wrap::after {
     background-color: #999;
   }
-  
+
   .banner {
     margin: 60px auto;
     margin-top: 80px;
@@ -389,6 +459,7 @@ export default {
       font-weight: 300;
       color: #999999;
       font-size: 10px;
+      margin-left: 15px;
     }
     .title {
       font-size: 16px;
@@ -502,7 +573,7 @@ export default {
   .home-content-left {
     width: 50%;
   }
- 
+
   .home-content-right {
     border: 1px solid black;
     width: 45%;
@@ -518,7 +589,16 @@ export default {
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    position: relative;
+    .report {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      color: #999999;
+      font-size: 12px;
+      cursor: pointer;
+    }
   }
   .el-carousel__item h3 {
     color: #475669;
@@ -535,11 +615,11 @@ export default {
   .el-carousel__item:nth-child(2n + 1) {
     background-color: #d3dce6;
   }
-  .el-icon-caret-top{
+  .el-icon-caret-top {
     color: #ffd04b;
   }
-  .el-backtop{
-    box-shadow: 0 0 6px rgba(0,0,0,.42);
+  .el-backtop {
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.42);
   }
 }
 </style>

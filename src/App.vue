@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app">
   
     <router-view/>
   </div>
@@ -59,5 +59,8 @@ input {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+}
+body{
+  background-color: #FCFCFC;
 }
 </style>

@@ -196,6 +196,7 @@ export default new Vuex.Store({
           item.replycontentery = ''
           item.ischeckReply = false
           item.allReply = ''
+          item.reportbtn= false
         })
         context.commit('getALLtips', res.data)
       })
@@ -208,6 +209,7 @@ export default new Vuex.Store({
           item.replycontentery = ''
           item.ischeckReply = false
           item.allReply = ''
+          item.reportbtn= false
         })
         // console.log(res.data)
         context.commit('getAllanonymous', res.data)
