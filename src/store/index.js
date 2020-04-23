@@ -39,7 +39,9 @@ export default new Vuex.Store({
     allanonymousTips: '', //匿名树洞列表
     currenttip: '', //当前树洞详情
     currentcomment: '', //当前详情中的评论
-    searchTips: '' //搜索结果列表
+    searchTips: '' ,//搜索结果列表
+    loading:false,
+    mysupportlist:'',//我的支持
   },
   mutations: {
     /**查看登录状态 */
@@ -54,11 +56,17 @@ export default new Vuex.Store({
     },
     /**首页获取所有不匿名树洞 */
     getALLtips(state, data) {
-      state.allTips = data
+     
+        state.allTips = data
+      
     },
     /**首页获取所有匿名树洞 */
     getAllanonymous(state, data) {
       state.allanonymousTips = data
+    },
+    /**获取我的支持 */
+    getMySupport(state,data){
+      state.mysupportlist = data
     },
     /**查看评论 */
     checkReply(state, data) {
@@ -190,7 +198,9 @@ export default new Vuex.Store({
       })
     },
     /**首页获取所有非匿名树洞 */
-    getALLtips_asyn(context) {
+    getALLtips_asyn(context,state) {
+      let usermsg = JSON.parse(utils.getCookie('user'))
+
       http.get('/api/TreeHole').then(res => {
         res.data.forEach(item => {
           item.replycontentery = ''
@@ -198,12 +208,37 @@ export default new Vuex.Store({
           item.allReply = ''
           item.reportbtn= false
         })
-        context.commit('getALLtips', res.data)
+        // console.log(res.data)
+        if(usermsg){
+          http.post('/api/SupportList', {
+            nickname: usermsg.nickname
+          }).then(res2 => {
+            // console.log(res2.data)
+            if (res2.data.length !== 0) {
+              let newarr1 = res.data.map(item1 => {
+                item1.flag = res2.data.some(item2 => item1.topicID === item2.topicID) 
+                // console.log(item1.flag)
+                  return item1
+              })
+              console.log(newarr1)
+              context.commit('getALLtips', newarr1)
+            }else{
+              context.commit('getALLtips', res.data)
+            }
+            // console.log(this.tree_articlelist.moodlist)
+          })
+        }else{
+          context.commit('getALLtips', res.data)
+        }
+        
+        
       })
     },
 
     /**首页获取所有匿名树洞 */
     getAllanonymous_asyn(context) {
+      let usermsg = JSON.parse(utils.getCookie('user'))
+
       http.get('/api/TreeHoleNotName').then(res => {
         res.data.forEach(item => {
           item.replycontentery = ''
@@ -212,7 +247,35 @@ export default new Vuex.Store({
           item.reportbtn= false
         })
         // console.log(res.data)
-        context.commit('getAllanonymous', res.data)
+        if(usermsg){
+          http.post('/api/SupportList', {
+            nickname: usermsg.nickname
+          }).then(res2 => {
+            // console.log(res2.data)
+            if (res2.data.length !== 0) {
+              let newarr1 = res.data.map(item1 => {
+                item1.flag = res2.data.some(item2 => item1.topicID === item2.topicID) 
+                // console.log(item1.flag)
+                  return item1
+              })
+              console.log(newarr1)
+              context.commit('getAllanonymous', newarr1)
+            }else{
+              context.commit('getAllanonymous', res.data)
+            }
+            // console.log(this.tree_articlelist.moodlist)
+          })
+        }else{
+          context.commit('getAllanonymous', res.data)
+        }
+      })
+    },
+    /**获取所有我的支持 */
+    getMySupport_asyn(context){
+      http.post('/api/SupportList', {
+        nickname: state.user.nickname
+      }).then(res => {
+        context.commit('getMySupport',res.data)
       })
     },
     /**查看树洞详情 */

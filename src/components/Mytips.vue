@@ -41,8 +41,86 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="匿名树洞" name="second">匿名树洞</el-tab-pane>
-      <el-tab-pane label="非匿名树洞" name="third">非匿名树洞</el-tab-pane>
+      <el-tab-pane label="匿名树洞" name="second">
+         <div class="alltips">
+          <!-- <p style="color:#999;margin-bottom:20px"></p> -->
+          <div v-for="(item, index) in allArticlenoname" :key="item.topicID" class="tip-item">
+            <el-popover placement="top" width="160" v-model="item.delete">
+              <p>确定删除这一条树洞吗？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="item.delete = false">取消</el-button>
+                <el-button type="primary" size="mini" @click="deleteTip(item.topicID, $store.state.user.nickname, index)">确定</el-button>
+              </div>
+              <i slot="reference" class="el-icon-circle-close" style="position:absolute;top:16px;right:0px;cursor:pointer" title="删除"></i>
+            </el-popover>
+            <el-tag type="warning" effect="dark" class="anonymous-tag" v-if="item.isName == '不匿名'">不匿名</el-tag>
+            <el-tag type="info" effect="dark" class="anonymous-tag" v-if="item.isName == '已匿名'">匿名</el-tag>
+            <el-collapse accordion title="查看详情">
+              <el-collapse-item>
+                <template slot="title">
+                  <span title="标题">标题：{{ item.title }}</span>
+                </template>
+                <div class="tip-content">
+                  <div v-html="item.contentery"></div>
+                  <div class="tip-time">
+                    <div>
+                      <i class="el-icon-view"></i> <span style="display:inline-block;width:30px;"> {{ item.browseCount }}</span>
+                    </div>
+                    <div style="cursor: pointer;" @click="lookReply(item.nickName,item.topicID)">
+                      <i class="el-icon-chat-line-square"></i> <span style="display:inline-block;width:30px;"> {{ item.replyCount }}</span>
+                    </div>
+                    <div>
+                      <i class="el-icon-timer"></i> <span style="display:inline-block;width:166px;"> {{ item.time }}</span>
+                    </div>
+                  </div>
+                  
+                </div>
+                <div>22</div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="非匿名树洞" name="third">
+         <div class="alltips">
+          <!-- <p style="color:#999;margin-bottom:20px"></p> -->
+          <div v-for="(item, index) in allArticlehasname" :key="item.topicID" class="tip-item">
+            <el-popover placement="top" width="160" v-model="item.delete">
+              <p>确定删除这一条树洞吗？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="item.delete = false">取消</el-button>
+                <el-button type="primary" size="mini" @click="deleteTip(item.topicID, $store.state.user.nickname, index)">确定</el-button>
+              </div>
+              <i slot="reference" class="el-icon-circle-close" style="position:absolute;top:16px;right:0px;cursor:pointer" title="删除"></i>
+            </el-popover>
+            <el-tag type="warning" effect="dark" class="anonymous-tag" v-if="item.isName == '不匿名'">不匿名</el-tag>
+            <el-tag type="info" effect="dark" class="anonymous-tag" v-if="item.isName == '已匿名'">匿名</el-tag>
+            <el-collapse accordion title="查看详情">
+              <el-collapse-item>
+                <template slot="title">
+                  <span title="标题">标题：{{ item.title }}</span>
+                </template>
+                <div class="tip-content">
+                  <div v-html="item.contentery"></div>
+                  <div class="tip-time">
+                    <div>
+                      <i class="el-icon-view"></i> <span style="display:inline-block;width:30px;"> {{ item.browseCount }}</span>
+                    </div>
+                    <div style="cursor: pointer;" @click="lookReply(item.nickName,item.topicID)">
+                      <i class="el-icon-chat-line-square"></i> <span style="display:inline-block;width:30px;"> {{ item.replyCount }}</span>
+                    </div>
+                    <div>
+                      <i class="el-icon-timer"></i> <span style="display:inline-block;width:166px;"> {{ item.time }}</span>
+                    </div>
+                  </div>
+                  
+                </div>
+                <div>22</div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -57,6 +135,8 @@ export default {
       isLogin: false, //是否登录
       user: '', //登录用户
       allArticle: '', //所有树洞
+      allArticlehasname: '', //所有不匿名树洞
+      allArticlenoname: '', //所有匿名树洞
       articlenum: '', //树洞数
       visible: false //弹出框是否可见
     }
@@ -131,6 +211,37 @@ export default {
           item.delete = false
         })
         this.allArticle = res.data
+      }
+      // console.log(arr)
+    })
+    /**本人所有匿名树洞 */
+    http.post('/api/UserTreeNotName', { nickname: this.user.nickname }).then(res => {
+      console.log(res.data)
+      // this.a = res.data[0].contentery
+      // let arr = JSON.parse(JSON.stringify(res.data))
+      if (res.data.length == 0) {
+        this.allArticlenoname = '空'
+      } else {
+        res.data.forEach(item => {
+          item.delete = false
+        })
+        this.allArticlenoname = res.data
+      }
+      // console.log(arr)
+    })
+
+    /**本人所有不匿名树洞 */
+    http.post('/api/UserTreeName', { nickname: this.user.nickname }).then(res => {
+      console.log(res.data)
+      // this.a = res.data[0].contentery
+      // let arr = JSON.parse(JSON.stringify(res.data))
+      if (res.data.length == 0) {
+        this.allArticlehasname = '空'
+      } else {
+        res.data.forEach(item => {
+          item.delete = false
+        })
+        this.allArticlehasname = res.data
       }
       // console.log(arr)
     })

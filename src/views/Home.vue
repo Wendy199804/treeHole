@@ -5,9 +5,24 @@
 
     <div class="banner">
       <el-carousel :interval="4000" type="card" height="200px">
-        <el-carousel-item v-for="item in carouselimgArr" :key="item.id">
+        <el-carousel-item >
           <div style="width:100%;height:100%">
-            <img :src="item.src" alt="" class="carousel-img" style="width:100%;height:100%" />
+            <img src="../../public/static/images/app1.png" alt="" class="carousel-img" style="width:100%;height:100%" />
+          </div>
+        </el-carousel-item>
+        <el-carousel-item >
+          <div style="width:100%;height:100%">
+            <img src="../../public/static/images/app2.png" alt="" class="carousel-img" style="width:100%;height:100%" />
+          </div>
+        </el-carousel-item>
+        <el-carousel-item >
+          <div style="width:100%;height:100%">
+            <img src="../../public/static/images/app3.png" alt="" class="carousel-img" style="width:100%;height:100%" />
+          </div>
+        </el-carousel-item>
+        <el-carousel-item >
+          <div style="width:100%;height:100%">
+            <img src="../../public/static/images/app4.png" alt="" class="carousel-img" style="width:100%;height:100%" />
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -45,7 +60,9 @@
                           <el-button size="mini" type="text" @click="item.reportbtn = false">取消</el-button>
                           <el-button type="primary" size="mini" @click="report(item.nickName,index,false)">确定</el-button>
                         </div>
-                        <div class="report" slot="reference">举报 <i class="el-icon-warning"></i></div>
+                        <div class="report" slot="reference">举报 <i class="el-icon-warning"></i> 
+                        <div style="position: absolute ;left:-59px;top:0px;border-right:1px solid #ddd;padding-right:10px;">支持 <i :class="item.flag?'el-icon-star-on':'el-icon-star-off'" style="color:#EF5656"></i></div>
+                         </div>
                       </el-popover>
                     </div>
                     <div class="title">
@@ -105,7 +122,10 @@
                           <el-button size="mini" type="text" @click="item.reportbtn = true">取消</el-button>
                           <el-button type="primary" size="mini" @click="report(item.nickName,index,false)">确定</el-button>
                         </div>
-                        <div class="report" slot="reference">举报 <i class="el-icon-warning"></i></div>
+                        <div class="report" slot="reference">举报 <i class="el-icon-warning"></i>
+                        <div style="position: absolute ;left:-59px;top:0px;border-right:1px solid #ddd;padding-right:10px;">支持 <i :class="item.flag?'el-icon-star-on':'el-icon-star-off'" style="color:#EF5656"></i></div>
+                        
+                        </div>
                       </el-popover>
                     </div>
 
@@ -145,6 +165,15 @@
       </div>
       <div class="home-content-right">
         <!-- <div class="wx-erwm"></div> -->
+        <p style="font-size:16px;text-align:center;color:#fff;padding:20px 40px;border-bottom:2px dashed #fff">APP 上线啦！！🙂</p>
+        <div style="border-bottom: 2px dashed #fff;">
+          <p>Android download 👇</p>
+          <img src="../../public/static/images/Android.png" alt="">
+        </div>
+        <div>
+          <p>IOS download 👇</p>
+          <img src="../../public/static/images/IOS.png" alt="">
+        </div>
       </div>
     </div>
 
@@ -374,9 +403,10 @@ export default {
 @import '../css/curdetails.css';
 .home {
   // height: 100vh;
-  // background-image: url(../assets/body_bg.jpg);
-  // background-repeat: no-repeat;
-  // background-color: rgb(27, 33, 69);
+  background-image: url(../../public/static/images/body_bg.jpg);
+  background-repeat: no-repeat;
+  background-color: rgb(27, 33, 69);
+  padding-top:30px;
   // background-attachment: fixed;
   min-width: 900px;
   .if-alltips-ready {
@@ -417,8 +447,9 @@ export default {
   }
 
   .banner {
-    margin: 60px auto;
-    margin-top: 80px;
+    margin: 0px auto;
+    margin-top: 35px;
+    margin-bottom:45px;
     width: 1000px;
     height: 200px;
   }
@@ -435,6 +466,11 @@ export default {
     background-color: white;
     box-sizing: border-box;
     box-shadow: 1px 1px 10px rgb(187, 187, 187);
+    &:hover{
+      transform: scale(1.03);
+      margin-top:20px;
+      margin-bottom: 20px;
+    }
   }
   .tips-item-top {
     display: flex;
@@ -575,14 +611,26 @@ export default {
   }
 
   .home-content-right {
-    border: 1px solid black;
+    border: 3px dashed #fff;
     width: 45%;
+    height: 720px;
     // display: flex;
     // justify-content: flex-end;
     .wx-erwm {
       width: 200px;
       height: 200px;
       background-color: rgb(90, 73, 73);
+    }
+    div{
+      text-align: center;
+      color:#fff;
+      
+      padding-bottom:20px;
+      
+      p{
+        margin: 10px 0;
+        font-size: 18px;
+      }
     }
   }
   .ut {
@@ -620,6 +668,9 @@ export default {
   }
   .el-backtop {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.42);
+  }
+  .el-icon-star-on{
+    font-size: 16px;
   }
 }
 </style>
