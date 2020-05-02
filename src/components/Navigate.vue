@@ -4,16 +4,17 @@
 
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#000" text-color="#fff" active-text-color="#ffd04b">
       <el-menu-item index="1"><router-link to="/home">首页</router-link></el-menu-item>
-     
-      <el-menu-item index="4"><router-link :to="{ name: 'article' }">树洞</router-link></el-menu-item>
 
+      <el-menu-item index="4"><router-link :to="{ name: 'article' }">树洞</router-link></el-menu-item>
+      
       <el-menu-item v-if="!isLogin" index="5" class="sign"><router-link :to="{ name: 'signin' }">登录</router-link></el-menu-item>
       <el-menu-item index="6" class="sign"><router-link :to="{ name: 'signup' }">注册</router-link></el-menu-item>
+
       <el-submenu v-if="isLogin" index="7" class="sign">
         <template slot="title">欢迎回来，{{ loginuser.username }}</template>
-        <el-menu-item index="2-1"><router-link :to="{ name: 'personal' }" style="color:white;display: block;width: 100%;height: 100%;">个人中心</router-link></el-menu-item>
-        <el-menu-item index="2-2">设置</el-menu-item>
-        <el-menu-item index="2-3"><span @click="logout" style="color:white;display: block;width: 100%;height: 100%;">注销</span></el-menu-item>
+        <el-menu-item index="7-1"><router-link :to="{ name: 'personal' }" style="color:white;display: block;width: 100%;height: 100%;">个人中心</router-link></el-menu-item>
+        <el-menu-item index="7-2">设置</el-menu-item>
+        <el-menu-item index="7-3"><span @click="logout" style="color:white;display: block;width: 100%;height: 100%;">注销</span></el-menu-item>
       </el-submenu>
     </el-menu>
     <!-- </div> -->
@@ -27,23 +28,23 @@ export default {
   data() {
     return {
       activeIndex: '',
-      input3: ''
+      input3: '',
     }
   },
   props: {
     defaultIndex: {
       type: String,
-      required: false
+      required: false,
     },
     isLogin: {
       type: Boolean,
-      required: true
+      required: true,
     },
     loginuser: {
       type: Object,
       default: {},
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     handleSelect(key, keyPath) {
@@ -53,14 +54,14 @@ export default {
       this.$confirm('您将注销此账户, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
           this.$message({
             type: 'success',
-            message: '已成功注销!'
+            message: '已成功注销!',
           })
-          
+
           utils.removeCookie('user')
           this.$store.state.isLogin = false
           this.$router.push({ name: 'home' })
@@ -69,16 +70,16 @@ export default {
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消'
+            message: '已取消',
           })
         })
-    }
+    },
   },
   mounted() {},
   created() {
     console.log(this.defaultIndex)
     this.activeIndex = this.defaultIndex
-  }
+  },
 }
 </script>
 

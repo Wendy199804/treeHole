@@ -79,19 +79,19 @@ export default new Vuex.Store({
         }
         if (!data.bool) {//非匿名树洞评论
           state.allTips[data.index].ischeckReply = true
-          http.post('/api/ReplyDetails', params).then(res => {
+          http.post('http://www.maown.net:8000/api/ReplyDetails', params).then(res => {
             state.allTips[data.index].allReply = res.data
           })
         }else{//匿名树洞评论
           state.allanonymousTips[data.index].ischeckReply = true
-          http.post('/api/ReplyDetails', params).then(res => {
+          http.post('http://www.maown.net:8000/api/ReplyDetails', params).then(res => {
             state.allanonymousTips[data.index].allReply = res.data
           })
         }
       } else {
         //打开详情页评论
         http
-          .post('/api/ReplyDetails', {
+          .post('http://www.maown.net:8000/api/ReplyDetails', {
             nickname: data.nickname,
             topicid: data.topicid
           })
@@ -121,7 +121,7 @@ export default new Vuex.Store({
         }
       }
 
-      http.post('/api/InsertReply', params).then(res => {
+      http.post('http://www.maown.net:8000/api/InsertReply', params).then(res => {
         if (res.data == 'success') {
           data.that.$notify({
             title: '评论成功',
@@ -166,7 +166,7 @@ export default new Vuex.Store({
     sign_in_asyn(context, params) {
       // console.log(params)
       let that = this
-      http.post('/api/User', params.signmsg).then(res => {
+      http.post('http://www.maown.net:8000/api/User', params.signmsg).then(res => {
         if (res.data.length !== 0) {
           // console.log(res.data)
           params.that.$message({
@@ -201,7 +201,7 @@ export default new Vuex.Store({
     getALLtips_asyn(context,state) {
       let usermsg = JSON.parse(utils.getCookie('user'))
 
-      http.get('/api/TreeHole').then(res => {
+      http.get('http://www.maown.net:8000/api/TreeHole').then(res => {
         res.data.forEach(item => {
           item.replycontentery = ''
           item.ischeckReply = false
@@ -210,7 +210,7 @@ export default new Vuex.Store({
         })
         // console.log(res.data)
         if(usermsg){
-          http.post('/api/SupportList', {
+          http.post('http://www.maown.net:8000/api/SupportList', {
             nickname: usermsg.nickname
           }).then(res2 => {
             // console.log(res2.data)
@@ -239,7 +239,7 @@ export default new Vuex.Store({
     getAllanonymous_asyn(context) {
       let usermsg = JSON.parse(utils.getCookie('user'))
 
-      http.get('/api/TreeHoleNotName').then(res => {
+      http.get('http://www.maown.net:8000/api/TreeHoleNotName').then(res => {
         res.data.forEach(item => {
           item.replycontentery = ''
           item.ischeckReply = false
@@ -248,7 +248,7 @@ export default new Vuex.Store({
         })
         // console.log(res.data)
         if(usermsg){
-          http.post('/api/SupportList', {
+          http.post('http://www.maown.net:8000/api/SupportList', {
             nickname: usermsg.nickname
           }).then(res2 => {
             // console.log(res2.data)
@@ -272,7 +272,7 @@ export default new Vuex.Store({
     },
     /**获取所有我的支持 */
     getMySupport_asyn(context){
-      http.post('/api/SupportList', {
+      http.post('http://www.maown.net:8000/api/SupportList', {
         nickname: state.user.nickname
       }).then(res => {
         context.commit('getMySupport',res.data)
@@ -281,14 +281,14 @@ export default new Vuex.Store({
     /**查看树洞详情 */
     checkDetails_asyn(context, params) {
       http
-        .post('/api/TreeDetails', {
+        .post('http://www.maown.net:8000/api/TreeDetails', {
           topicid: params.topicid
         })
         .then(res => {
           context.commit('checkDetails', res.data[0])
         })
       http
-        .post('/api/ReplyDetails', {
+        .post('http://www.maown.net:8000/api/ReplyDetails', {
           topicid: params.topicid,
           nickname: params.nickname
         })
@@ -301,13 +301,13 @@ export default new Vuex.Store({
       let params = {
         selectv: searchTipValue
       }
-      http.post('/api/SelectTree', params).then(res => {
+      http.post('http://www.maown.net:8000/api/SelectTree', params).then(res => {
         context.commit('searchKeywords', res.data)
       })
     },
     /**发布树洞 */
     submitTip(context, data) {
-      http.post('/api/InsertTree', data.params).then(res => {
+      http.post('http://www.maown.net:8000/api/InsertTree', data.params).then(res => {
         // console.log(res)
         if (res.data === 'success') {
           data.that.$message({

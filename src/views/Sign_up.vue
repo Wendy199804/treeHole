@@ -149,7 +149,7 @@ export default {
   methods: {
     submitForm(formName) {
       let that = this
-      http.post('/api/insertUser', this.ruleForm).then(res => {
+      http.post('http://www.maown.net:8000/api/insertUser', this.ruleForm).then(res => {
         console.log(res)
         if (res.data === 'success') {
           that.$message({

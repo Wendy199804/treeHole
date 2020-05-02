@@ -29,7 +29,6 @@
 import Navigate from '@/components/Navigate.vue'
 import Footer from '@/components/Footer.vue'
 import utils from '@/utils/utils.js'
-import http from '@/utils/http.js'
 
 /**富文本编辑器**/
 import { quillEditor } from 'vue-quill-editor'

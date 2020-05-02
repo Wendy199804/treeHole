@@ -44,7 +44,7 @@ export default {
     this.$store.commit('ifLogin')
     this.user = this.$store.state.user
     this.isLogin = this.$store.state.isLogin
-    http.post('/api/UserReply', { nickname: this.user.nickname }).then(res => {
+    http.post('http://www.maown.net:8000/api/UserReply', { nickname: this.user.nickname }).then(res => {
       console.log(res.data)
       if (res.data.length !== 0) {
         this.commentslist = res.data

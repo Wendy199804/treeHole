@@ -147,7 +147,7 @@ export default {
       this.allArticle[index].delete = true
       console.log(topicid, nickname)
       http
-        .post('/api/UserTreeDel', { topicid, nickname })
+        .post('http://www.maown.net:8000/api/UserTreeDel', { topicid, nickname })
         .then(res => {
           console.log(res)
           if (res.data == 'success') {
@@ -155,7 +155,7 @@ export default {
               type: 'success',
               message: '删除成功!'
             })
-            http.post('/api/UserTree', { nickname }).then(res => {
+            http.post('http://www.maown.net:8000/api/UserTree', { nickname }).then(res => {
               if (res.data.length == 0) {
                 this.allArticle = '空'
               } else {
@@ -183,7 +183,7 @@ export default {
     },
     lookReply(nickname,topicid){
       console.log(nickname,topicid)
-      http.post('/api/ReplyDetails',{nickname,topicid}).then(res => {
+      http.post('http://www.maown.net:8000/api/ReplyDetails',{nickname,topicid}).then(res => {
         console.log(res)
       })
     },
@@ -200,7 +200,7 @@ export default {
   mounted() {
     /**获取本人的所有树洞 */
     console.log(this.user.nickname)
-    http.post('/api/UserTree', { nickname: this.user.nickname }).then(res => {
+    http.post('http://www.maown.net:8000/api/UserTree', { nickname: this.user.nickname }).then(res => {
       console.log(res.data)
       // this.a = res.data[0].contentery
       // let arr = JSON.parse(JSON.stringify(res.data))
@@ -215,7 +215,7 @@ export default {
       // console.log(arr)
     })
     /**本人所有匿名树洞 */
-    http.post('/api/UserTreeNotName', { nickname: this.user.nickname }).then(res => {
+    http.post('http://www.maown.net:8000/api/UserTreeNotName', { nickname: this.user.nickname }).then(res => {
       console.log(res.data)
       // this.a = res.data[0].contentery
       // let arr = JSON.parse(JSON.stringify(res.data))
@@ -231,7 +231,7 @@ export default {
     })
 
     /**本人所有不匿名树洞 */
-    http.post('/api/UserTreeName', { nickname: this.user.nickname }).then(res => {
+    http.post('http://www.maown.net:8000/api/UserTreeName', { nickname: this.user.nickname }).then(res => {
       console.log(res.data)
       // this.a = res.data[0].contentery
       // let arr = JSON.parse(JSON.stringify(res.data))
@@ -246,7 +246,7 @@ export default {
       // console.log(arr)
     })
     /**本人所有树洞数 */
-    http.post('/api/UserTreeNum', { nickname: this.user.nickname }).then(res => {
+    http.post('http://www.maown.net:8000/api/UserTreeNum', { nickname: this.user.nickname }).then(res => {
       console.log(res.data)
       this.articlenum = res.data
     })

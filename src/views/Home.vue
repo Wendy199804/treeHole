@@ -302,7 +302,7 @@ export default {
           bereportednickname: this.$store.state.user.nickname,
           reason: this.reportreason
         }
-        http.post('/api/InsertUserError', params).then(res => {
+        http.post('http://www.maown.net:8000/api/InsertUserError', params).then(res => {
           console.log(res)
           if (res.data == 'success') {
             this.$message({
@@ -468,8 +468,8 @@ export default {
     box-shadow: 1px 1px 10px rgb(187, 187, 187);
     &:hover{
       transform: scale(1.03);
-      margin-top:20px;
-      margin-bottom: 20px;
+      // margin-top:20px;
+      // margin-bottom: 20px;
     }
   }
   .tips-item-top {

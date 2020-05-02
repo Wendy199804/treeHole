@@ -85,7 +85,7 @@ export default {
             conpassword:this.ruleForm.pass
           }
           console.log(params)
-          http.post('api/ResetPass',params).then(res => {
+          http.post('http://www.maown.net:8000/api/ResetPass',params).then(res => {
             console.log(res.data)
           }).catch(err => {
             console.log(err)
