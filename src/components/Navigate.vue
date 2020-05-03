@@ -60,11 +60,11 @@ export default {
           this.$message({
             type: 'success',
             message: '已成功注销!',
-          })
+          }) 
 
           utils.removeCookie('user')
           this.$store.state.isLogin = false
-          this.$router.push({ name: 'home' })
+          this.$router.push({ name: 'signin' })
           console.log(this.$store.state.isLogin)
         })
         .catch(() => {

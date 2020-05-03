@@ -75,7 +75,7 @@ const router = new VueRouter({
 //导航守卫
 router.beforeEach((to, from, next) => {
   // console.log(Vue)
-  if(to.name == 'home' || to.name == 'signup' || to.name == 'signin'){
+  if(to.name == 'home' || to.name == 'signup' || to.name == 'signin' ){
     next()
   }else{
     if(!utils.getCookie('user')){

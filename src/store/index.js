@@ -53,6 +53,8 @@ export default new Vuex.Store({
       } else {
         state.isLogin = false
       }
+      console.log(JSON.parse(utils.getCookie('user')))
+
     },
     /**首页获取所有不匿名树洞 */
     getALLtips(state, data) {
@@ -141,10 +143,11 @@ export default new Vuex.Store({
       })
     },
     /**登录 */
-    // sign_in(state,params){
-    //   state.userinfo = params
-    //   console.log(state.userinfo)
-    // }
+    sign_in(state,params){
+      state.userinfo = params
+      console.log(state.userinfo)
+      state.isLogin=true
+    },
     /**查看树洞详情 */
     checkDetails(state, params) {
       state.currenttip = params
@@ -167,6 +170,7 @@ export default new Vuex.Store({
       // console.log(params)
       let that = this
       http.post('http://www.maown.net:8000/api/User', params.signmsg).then(res => {
+        console.log(res)
         if (res.data.length !== 0) {
           // console.log(res.data)
           params.that.$message({
@@ -187,7 +191,7 @@ export default new Vuex.Store({
             tipnumber: res.data[0].tipnumber //被举报数
           }
           utils.setCookie('user', JSON.stringify(user), 2)
-          // context.commit('sign_in',res.data[0])
+          context.commit('sign_in',res.data[0])
         } else {
           params.that.$message({
             showClose: true,

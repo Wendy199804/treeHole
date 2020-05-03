@@ -4,7 +4,7 @@
       <el-form-item prop="username">
         <el-input v-model="ruleForm.username" placeholder="请输入用户名.." prefix-icon="el-icon-user"></el-input>
       </el-form-item>
-       <el-form-item prop="number">
+      <el-form-item prop="number">
         <el-input v-model="ruleForm.number" placeholder="请输入学号.." prefix-icon="el-icon-school"></el-input>
       </el-form-item>
       <el-form-item prop="pass">
@@ -13,6 +13,9 @@
 
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="rejectTo">我是管理员</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -49,39 +52,43 @@ export default {
       ruleForm: {
         pass: '',
         username: '',
-        number:''
+        number: '',
       },
       rules: {
         pass: [{ validator: validatePass, trigger: 'blur' }],
         username: [{ validator: checkusername, trigger: 'blur' }],
         number: [{ validator: checknumber, trigger: 'blur' }],
-
-      }
+      },
+      // radio: '普通用户'
     }
   },
   methods: {
     submitForm(formName) {
       let that = this
-      let signmsg ={
-        username:that.ruleForm.username,
-        password:that.ruleForm.pass,
-        number:that.ruleForm.number,
-        enable:'普通用户'
+      let signmsg = {
+        username: that.ruleForm.username,
+        password: that.ruleForm.pass,
+        number: that.ruleForm.number,
+        enable: '普通用户',
       }
       that.$refs[formName].validate(valid => {
         if (valid) {
-          this.$store.dispatch('sign_in_asyn',{signmsg,that})
+          this.$store.dispatch('sign_in_asyn', { signmsg, that })
         } else {
           that.$message({
             showClose: true,
             message: '请把登录信息填写完整',
-            type: 'error'
+            type: 'error',
           })
           return false
         }
       })
-    }
-  }
+    },
+    /**管理员登录 */
+    rejectTo() {
+      window.location = 'http://www.maown.net:8802'
+    },
+  },
 }
 </script>
 
@@ -94,20 +101,20 @@ export default {
   width: 100vw;
   height: 100vh;
   min-width: 1000px;
-  input{
+  input {
     background-color: transparent;
     color: #ffffff;
   }
-  input::-webkit-input-placeholder{
+  input::-webkit-input-placeholder {
     color: #ffffff;
   }
-  input::-moz-placeholder{
+  input::-moz-placeholder {
     color: #ffffff;
   }
-  input:-ms-input-placeholder{
+  input:-ms-input-placeholder {
     color: #ffffff;
   }
-  form{
+  form {
     width: 300px;
     background-color: rgba(0, 0, 0, 0.432);
     padding: 50px 100px;
@@ -117,17 +124,18 @@ export default {
     left: 50%;
     transform: translateY(-50%) translateX(-50%);
   }
-  .el-input__icon{
+  .el-input__icon {
     color: #ffffff;
   }
-  .el-form-item__content{
+  .el-form-item__content {
     display: flex;
     justify-content: space-between;
   }
-  .el-button--primary,.el-button--default{
+  .el-button--primary,
+  .el-button--default {
     width: 100%;
   }
-  .el-button+.el-button{
+  .el-button + .el-button {
     margin-left: 0px;
   }
 }
